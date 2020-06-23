@@ -2,6 +2,12 @@
 
 The Imlac computers were a family of 16-bit minicomputers.
 
+## CERN
+
+Sadly, no CERN software has been preserved.  Included are two photos
+from Brian E. Carpenter.  One is of Jean-Pierre Potier, and the other
+is Brian E. Carpenter.  Photo credits to CERN.
+
 ## MIT
 
 Files from MIT's [Tapes of Tech Square
