@@ -1,0 +1,126 @@
+
+		  LVHTEST (Long-Vector Hardware Test Program)
+
+   LVHTEST is designed as a test program capable of determining the limiting
+   number of inches of long-vector display that can be processed by the PDS-
+   1 Display Processor before the processor has exceeded e 'reasonable' time
+   limit.
+
+   This is done by drawing a test pattern on the screen, and increasing  the
+   number  of inches drawn until the display time is in excess of a fortieth
+   of a second.  The test pattern is a set of points lieing on a circle with
+   long-vectors drawn between all pairs of points.
+
+   The user may arrive at the maximum drawing capability in one of two ways.
+   He may input parameters manually until a limiting combination is reached,
+   or he may start the program at a  set of values and put the program  into
+   its  automatic mode.   The program then draws the pattern and continually
+   enlarges the display  until the  limit is reached.   When  this limit  is
+   reached  using either method, manual or  automatic, a dot is displayed in
+   the center of the screen.
+
+   The general format for the input of parameters is
+
+			 POINTS, RADIUS, LEVEL, COPIES
+
+
+   Where:
+
+   POINTS 
+
+   The number of points  around the circle to  be generated is specified  in
+   the first parameter of the general input statement.  It is specified by a
+   number  from  one to  zero.   These numbers  correspond to  prime numbers
+   internally held.  That number will be displayed.
+
+   The default value for the number of points is 37 (represented by the  key
+   zero).
+
+
+   RADIUS
+
+   The  radius of  the circle  to be  generated is  specified by  inputing a
+   number between 100 and 511.  This number is the number of rastor units in
+   the circle.  The program default is 511.
+
+
+   LEVEL
+
+   The level parameter indicates  #the level of  connectors to be  generated
+   between  the points.   For example:  Level 1  indicates that all adjacent
+   points on the circle will be  connected.   Level 2 indicates that all  of
+   the  adjacent points  on the  circle will  be connected,  and every other
+   point   will  be  connected.    Level  3   indicates  that  all  adjacent
+   points,every other point, and every third point around the circle will be
+   connected.
+
+   Level is specified  by a  number from 1  to (Points  - 1).   The  program
+   default is (Points - 1)/2.
+
+
+   COPIES
+
+   The parameter, Copies, indicates the number of times that a display to be
+   generated  will  be drawn.   It  is  specified by  a  number from  one to
+   ten(i.e.,1-0).   The default value is one.
+
+
+   NOTES ON INPUT OF PARAMETERS 
+
+   Between each input of a parameter,  a comma must be given.   If not,  the
+   key will be read as if it were part of the parameter.  In the case of the
+   Points and the Copies parameters, the values displayed will be changed as
+   will the values stored.  This means that if a mistake is made in inputing
+   either  of these parameters it  can be corrected by  simply typing in the
+   intended value.
+
+   In the case of the Radius and Level parameters, however, it is not  quite
+   the  same.   These  parameters  will  accept up  to  3  and  2 characters
+   respectively.   So, if for example, the user has input the number '2'  as
+   an  entry for the Level parameter, but he intended to use the number '12'
+   he would have to first fill the existing 'accept' capacity (2  characters
+   in  the Level  parameter).   He would  do this  by typing  some arbitrary
+   character.   This would fill  the two  character accept  capacity of  the
+   parameter.   The  next character he input  would clear the existing value
+   and display and  would begin  freshly.   In the example,  the user  would
+   (after  typing the arbitrary character) input the number '12' which would
+   become the new value of Level.
+
+   The user may also elect to use the program default value.   This is  done
+   by  simply  inputing  a comma,  or  in  the case  of  the  last parameter
+   (Copies), a carraige return, without inputing any value of his  own.   In
+   addition,  the user may  at any time  in the course  of inputing the four
+   parameters type a carraige return.  This has the effect of defaulting all
+   values not  yet specified,  while leaving  intact all  values which  have
+   been.
+
+
+
+   SPECIAL FUNCTION KEYS
+
+
+   CTRL-Z used to exit the program.
+
+   ESC  resets the program and therefore allows the user to form another DLV
+   list with different parameters.
+
+   PAGE XMIT changes the  display from the initial  input display where  the
+   calculated display length is shown to the display of the test pattern and
+   visa versa.  
+
+   CTRL B shifts from large to small display buffer, or visa versa.  A large
+   buffer is default.   A small buffer does protects the upper 2k from being
+   modified.	A large buffer  allows the user to  draw some of the  larger
+   test  patterns.   If the user attempts to  draw these with a small buffer
+   the program resets itself.
+
+   A is the key which invokes  the automatic mode.   When the key is  typed,
+   the  existing values  of POINTS and  COPIES are retained,  the others are
+   handled by the  program.   LEVELS is  defaulted while  RADIUS is  changed
+   until  the maximum  display is  reached.   At this  point the  display is
+   returned to the input mode, and the radius is displayed under the  column
+   of  calculated values of  display inches.   The generated  display can be
+   invoked with the PAGE XMIT key, as usual.   Only issue the A key before a
+   display  is  built  (before an  asteric  appears in  upper  right corner)
+   otherwise the program will fail.
+ 

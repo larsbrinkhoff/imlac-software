@@ -1,0 +1,13 @@
+
+
+	SQUARE -- Long Vector and Suppressed Grid
+
+This diagnostic puts up a fairly complex grid composed of
+lines drawn with DLV and DGB instructions.  If it is working
+properly it should look like a checkerboard with a single large
+X over it.  Every other vertical or horizontal line should be
+dim (as it is drawn in suppressed grid).
+
+The program is auto-starting, and it will return to SSV if
+control-Z is typed.
+ed g

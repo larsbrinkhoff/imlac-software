@@ -1,0 +1,237 @@
+THIS IS A TEST FILE TO TEST IMLAC TRANSMISSION OF TABS AND SPACES USING THE
+SPACE AND TAB COMPACTIFICATION HACKS.
+	|A SINGLE TAB
+		|TWO TABS
+								|8 TABS
+ | | | | | | | ||SINGLE SPACES
+        |8 SPACES
+	        |TAB FOLLOWED BY 8 SPACES
+                |16 SPACES
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                               |80 SP
+                                                                                |80 SP
+                                                                               |80 SP
+                                                                               |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+									|10 TABS
+								|10 TABS
+								|1 TABS
+										|10 TABS
+										|10 TABS
+										|1 TABS
+										|10 TABS
+										|10 TABS
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+
+NOW TRY SOME LINES SHORTER THAN 64 TO SEE IF THAT WINS BETTER.
+
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+
+NOW TRY SPACES AT THE END OF A LINE
+4|    
+8|        
+					|4    
+					|8        
+THIS IS A TEST FILE TO TEST IMLAC TRANSMISSION OF TABS AND SPACES USING THE
+SPACE AND TAB COMPACTIFICATION HACKS.
+	|A SINGLE TAB
+		|TWO TABS
+							|8 TABS
+ | | | | | | | ||SINGLE SPACES
+        |8 SPACES
+	        |TAB FOLLOWED BY 8 SPACES
+                |16 SPACES
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                               |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                               |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+										|10 TABS
+										|10 TABS
+									|10 TABS
+										|10 TABS
+										|10 TABS
+								|10 TABS
+										|10 TABS
+									|10 TABS
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+
+NOW TRY SOME LINES SHORTER THAN 64 TO SEE IF THAT WINS BETTER.
+
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+
+NOW TRY SPACES AT THE END OF A LINE
+4|    
+8|        
+					|4    
+					|8        
+THIS IS A TEST FILE TO TEST IMLAC TRANSMISSION OF TABS AND SPACES USING THE
+SPACE AND TAB COMPACTIFICATION HACKS.
+	|A SINGLE TAB
+		|TWO TABS
+								|8 TABS
+ | | | | | | | ||SINGLE SPACES
+        |8 SPACES
+	        |TAB FOLLOWED BY 8 SPACES
+                |16 SPACES
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                               |80 SP
+                                                                               |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+										|10 TABS
+										|10 TABS
+										|10 TABS
+									|10 TABS
+										|10 TABS
+										|10 TABS
+										|10 TABS
+										|10 TABS
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A  A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+
+NOW TRY SOME LINES SHORTER THAN 64 TO SEE IF THAT WINS BETTER.
+
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+
+NOW TRY SPACES AT THE END OF A LINE
+4|    
+8|        
+					|4    
+					|8        
+THIS IS A TEST FILE TO TEST IMLAC TRANSMISSION OF TABS AND SPACES USING THE
+SPACE AND TAB COMPACTIFICATION HACKS.
+	|A SINGLE TAB
+		|TWO TABS
+								|8 TABS
+ | | | | | | | ||SINGLE SPACES
+        |8 SPACES
+	        |TAB FOLLOWED BY 8 SPACES
+                |16 SPACES
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+                                                                                |80 SP
+								|10 TABS
+										|10 TABS
+										|10 TABS
+										|10 TABS
+										|10 TABS
+									|10 TABS
+										|10 TABS
+										|10 TABS
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+	A	A	A	A	A	A	A	A	A	|TAB-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A  A   |SP-CHR
+   A    A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   A   |SP-CHR
+
+NOW TRY SOME LINES SHORTER THAN 64 TO SEE IF THAT WINS BETTER.
+
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+	A	A	A	A	A	A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+A   A   A   A   A   A   A   A   A   A   A   A   A|48
+
+NOW TRY SPACES AT THE END OF A LINE
+4|    
+8|        
+					|4    
+					|8        
+A|48
