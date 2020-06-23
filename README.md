@@ -28,3 +28,9 @@ It's highly likely some of them are originally from MIT; for example
 
 *Filenames*: washington/freeway.pdf, washington/freeway.lst  
 A game from the department of Psychology at University of Washington.
+
+## Emulators
+
+[Josh Dersch's sImlac emulator](https://github.com/jdersch/sImlac) has
+support for the PDS-1D and PDS4, as well as most hardware options.  It
+will run most software in this collection.
