@@ -1,5 +1,7 @@
 # Software for the Imlac computers
 
+![Logotype](imlac.jpg)
+
 The Imlac computers were a family of 16-bit minicomputers.
 
 ## CERN
