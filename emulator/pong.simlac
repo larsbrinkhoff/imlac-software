@@ -1,0 +1,2 @@
+attach tty file ../purdue/pong
+boot stty

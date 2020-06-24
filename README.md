@@ -36,3 +36,6 @@ A game from the department of Psychology at University of Washington.
 [Josh Dersch's sImlac emulator](https://github.com/jdersch/sImlac) has
 support for the PDS-1D and PDS4, as well as most hardware options.  It
 will run most software in this collection.
+
+The `emulator` directory has configuration files for running some of
+the programs in this collection.

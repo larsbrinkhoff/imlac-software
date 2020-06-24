@@ -1,0 +1,9 @@
+enable data swtich mappings
+set data switch mode Momentary
+set data switch mapping 0 F1
+set data switch mapping 1 F2
+set data switch mapping 2 F3
+set data switch mapping 3 F4
+attach tty file ../purdue/war
+set data switch register 000000
+boot stty

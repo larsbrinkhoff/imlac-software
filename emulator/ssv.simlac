@@ -1,0 +1,5 @@
+enable mit mode
+set cpu type PDS1
+attach tty raw localhost d10016
+load memory ssv22.core 0 20000
+go 101
