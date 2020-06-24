@@ -1,0 +1,3 @@
+set framerate throttle true
+attach tty file ../purdue/clock
+boot stty

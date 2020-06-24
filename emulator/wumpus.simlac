@@ -1,0 +1,3 @@
+set data switch register 100000
+attach tty file ../purdue/wumpus
+boot tty
