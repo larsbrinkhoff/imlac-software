@@ -15,6 +15,12 @@ Sadly, no CERN software has been preserved.  Included are two photos
 from Brian E. Carpenter.  One is of Jean-Pierre Potier, and the other
 is Brian E. Carpenter.  Photo credits to CERN.
 
+## University of Illinois
+
+Steve Bunch may have a printout of an NGP-0 graphics and terminal emulator.
+This program is mentioned in [RFC 472](https://tools.ietf.org/html/rfc472)
+and [RFC 549](https://tools.ietf.org/html/rfc549).
+
 ## MIT
 
 Files from MIT's [Tapes of Tech Square
