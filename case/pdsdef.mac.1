@@ -1,0 +1,263 @@
+XLIST	; PDSDEF version 15;    TLB, 5-May-73
+;XLIST	; PDSDEF version 14;    TLB, 17-Nov-72
+;XLIST	; PDSDEF version 13;    TLB, 15-Nov-72
+;XLIST	; PDSDEF version 12;    TLB, 12-Nov-72
+;XLIST	; PDSDEF version 11;	TLB, 22-Sept-72
+;XLIST	; PDSDEF version 10;	TLB, 21-Mar-72
+;XLIST	; PDSDEF version 7;	TLB, 21-Feb-72
+;XLIST	; PDSDEF version 6;	TLB,  7-Jan-72
+;XLIST	; PDSDEF version 5;	TLB, 20-Dec-71
+;XLIST	; PDSDEF version 4;     TLB, 18-Dec-71
+	; Version 5)	INCE pseudo op, "." in INC mode.
+	; version 6)    most definitions on pass 1 only.
+	; version 7)	long vector instruction,
+	; version 10)	I is opdef'ed instead of defined.
+	; version 11)	LNV macro for long vectors.
+	; version 12)   Universal definitions.
+	; version 13)   PDSEND added.
+	; version 14)   Display can use upper 4 k.
+	; version 15)   Fixed literal optimizing hangup.
+
+	%pdsv==15		; pdsdef version number.
+IFDEF %UNIV%,<
+    ; GENERATE UNIVERSAL FILE.
+    UNIVERSAL PDSDEF - Assembly macros for IMLAC pds-1.
+    IF1,<DEFINE XLIST<;>>;  get listing on pass 2.
+    IF2,<PURGE XLIST>    ; leave it right when we're done.
+    > ; end ifdef %univ%
+
+IF1,<
+DEFINE .DEF(START,STEP,LIST)<%=START
+	IRP (LIST),<IFNB <LIST>,<OPDEF .'LIST[%]
+		DEFINE LIST(A)<.'LIST <<...==<Z A>>&3777> ! <<...&20000000>_-7>>>
+		%=%+STEP>>
+.DEF 4000,4000,<LAW,JMP,,DAC,XAM,ISZ,JMS,,AND,IOR,XOR,LAC,ADD,SUB,SAM>
+.DEF 104000,4000,<LWC,IJMP,,IDAC,IXAM,IISZ,IJMS,,IAND,IIOR,IXOR,ILAC,IADD,ISUB,ISAM>
+OPDEF HLT[0]
+OPDEF OPR[100000]
+
+DEFINE .DEF(LIST)<%==10000
+	IRP (LIST),<OPDEF .'LIST[%]
+		DEFINE LIST(A)<.'LIST <<A>&7777>>
+		%==%+10000>>
+.DEF <DLXA,DLYA,DEIM,DLNV,DJMS,DJMP>
+
+DEFINE .DEF(START,STEP,LIST)<%==START
+	IRP (LIST),<IFNB <LIST>,<OPDEF LIST[%]>
+	%==%+STEP>>
+.DEF 100000,1,<NOP,CLA,CMA,STA,IAC,COA,CIA,,CLL,CAL>
+.DEF 100020,10,<CML,STL,ODS>
+OPDEF LDA[100041]
+.DEF 3000,20,<RAL,RAR,SAL,SAR,DON>
+.DEF 1000,1,<IOT,DLZ,,DLA>
+.DEF 1011,1,<CTB,DOF>
+.DEF 1021,1,<KRB,KCF,KRC>
+.DEF 1031,1,<RRB,RCF,RRC>
+.DEF 1041,1,<TPR,TCF,TPC>
+OPDEF STB[1062]
+.DEF 1071,1,<SCF,IOS>
+OPDEF DHLT[0]
+OPDEF DNOP[4000]
+OPDEF DOPR[4000]
+DEFINE .DEF(BASE,START,LIST)<%==START
+	IRP (LIST),<OPDEF LIST[%+BASE]
+	%==%*2>>
+.DEF 2000,1,<ASZ,ASP,LSZ,DSF,KSF,RSF,TSF,SSF,HSF>
+.DEF 102000,1,<ASN,ASM,LSN,DSN,KSN,RSN,TSN,SSN,HSN>
+.DEF 4000,20,<DDSP,DRJM,DDYM,DDXM,DIYM,DIXM>
+
+
+OPDEF I[100000]
+DEFINE D(A)<D'A>
+
+OPDEF	DHVC[6000]
+OPDEF	DSTS[4004]
+OPDEF	DSTB[4010]
+
+I==100000
+> ; END IF1
+%BEAM==0
+DEFINE INC(X)<%BYTE==<%XYBIT==<%SIGN==<%NUM==0>>>
+IRPC (X),<.INC. \<"X">>
+IFN %BYTE,<.BYTE 0>>
+
+DEFINE INCE(X)<%BEAM==<%BYTE==<%XYBIT==<%SIGN==<%NUM==0>>>>
+.BYTE 60
+IRPC (X),<.INC. \<"X">>
+IFN %BYTE,<.BYTE 0>>
+
+DEFINE .INC.(A),<IC.'A>
+DEFINE IC.102,<%BEAM==100>
+DEFINE IC.104,<%BEAM==0>
+DEFINE IC.105,<.BYTE 60>
+DEFINE IC.116,<.BYTE 111>
+DEFINE IC.106,<.BYTE 171>
+DEFINE IC.120,<.BYTE 200>
+DEFINE IC.121,<.BYTE 140>
+DEFINE IC.122,<.BYTE 151>
+DEFINE IC.55,<%SIGN==4>
+DEFINE IC.101,<%SIGN==-3>
+DEFINE IC.57,<IFN %BYTE,<.BYTE 0>
+STOPI>
+DEFINE IC.60,<.NUM 0>
+DEFINE IC.61,<.NUM 1>
+DEFINE IC.62,<.NUM 2>
+DEFINE IC.63,<.NUM 3>
+DEFINE IC.64,<..NUM 4>
+DEFINE IC.65,<..NUM 5>
+DEFINE IC.66,<..NUM 6>
+DEFINE IC.67,<..NUM 7>
+DEFINE IC.40,<;>
+DEFINE IC.11,<;>
+Syn	ic.101, ic.141
+Syn	ic.102, ic.142
+Syn	ic.104, ic.144
+Syn	ic.105, ic.145
+Syn	ic.106, ic.146
+Syn	ic.116, ic.156
+Syn	ic.120, ic.160
+Syn	ic.121, ic.161
+Syn	ic.122, ic.162
+
+
+DEFINE .BYTE(B)<%TEMP2==%BYTE
+IFE %TEMP2,<%BYTE==<B>!400>
+IFN %TEMP2,<EXP <<%BYTE&377>_^D8>!<B>
+%BYTE==0>>
+
+
+	DEFINE LNV(X,Y,Z) <
+		X.=X
+		X..=0
+	IFL X.,<X.=-X.
+		X..=40000>
+		Y.=Y
+		Y..=0
+	IFL Y.,<Y.=-Y.
+		Y..=20000>
+		M.=X.
+		N.=Y.
+	IFG Y.-X.,<M.=Y.
+		N.=X.+10000>
+
+	DLNV	<N.-M.>&7777
+		M.+Z
+		X..+Y..+N.	>
+
+DEFINE .NUM(A)<IFGE %SIGN,<IFE %XYBIT,<%NUM==<%SIGN + A>_3>
+IFN %XYBIT,<.BYTE \<%LAST==<200!%BEAM!%NUM!%SIGN!A>>
+%NUM==0>
+%SIGN==0
+%XYBIT==<%XYBIT+1>&1>
+IFL %SIGN,<..NUM A>>
+
+DEFINE IC.56<.BYTE \<<%LAST&277>!%BEAM>>
+
+
+DEFINE ..NUM(A)<
+%NUM==<%NUM_3>!A
+IFE %SIGN+1,<
+.BYTE %NUM
+%NUM==0>
+%SIGN==%SIGN+1>
+
+
+DEFINE .ASCII(C)<
+	IRPC (C),<.BYTE "C">
+	IFE %BYTE,<...==0
+	...
+		>
+	IFN %BYTE,.BYTE 0>
+
+DEFINE ZRO(A)<EXP <A>&177777>
+
+DEFINE BSS(A)<BLOCK <A>>
+
+	DEFINE .PRINTX(A,B,C,D,E,F,G)<
+PRINTX A'B'C'D'E'F'G>
+
+;Non standard instruction mnemonics.
+
+OPDEF 	ION	[IOT 162]	; interupt enable
+OPDEF	IOF	[IOT 161]	; interupt disable
+OPDEF	ORINT	[IOT 101]	; or with interupt status
+OPDEF	LPRB	[IOT 131]	; or with light pen status
+OPDEF	LPCF	[IOT 132]	; light pen clear flag.
+OPDEF	LPRC	[IOT 133]	; read,clear flag.
+OPDEF	LPSF	[IOT 134]	; skip on light pen ready
+OPDEF	ARM	[IOT 141]	; arm light pen/sync interupt.
+OPDEF	CLLPEN	[077766]	; clear light pen enable.
+OPDEF	STLPEN	[077767]	; set light pen enable bit.
+OPDEF	LPON	[DOPR 15]	; sensitize light pen.
+OPDEF	LPOF	[DOPR 14]	; unsensitize light pen.
+
+
+.%.BLK==0
+	DEFINE REL(A)<
+	.REL (\.%.BLK,\<.%.BLK-1>,<A>)
+	.%.BLK==.%.BLK+1
+	RELOC <A>
+	PHASE <A>>
+
+	SYN REL,ORG
+	IFDEF  %UNIV%,<
+		DEFINE %ORG(Z)<
+		SALL
+		PURGE ORG
+		SYN REL,ORG
+		SYN %END,END
+		SYN .%REL,.REL
+		.CORE:
+		RELOC 0
+		INTERN .CORE,..CORE
+		.HWFRMT
+		REL (Z)
+		>
+		SYN %ORG,ORG
+		> ; end ifn %univ%.
+	IFNDEF %UNIV%,<%ORG==0>
+
+DEFINE .%REL(A,B,C)<
+	%%0==C
+	.%.BLK==0
+	DEFINE .REL (X,Y,Z)<
+		%%'Y==<XWD %%'Y-.,%%'Y>
+		%%'X==Z>>
+SYN .%REL,.REL
+
+DEFINE ..TBL(A)<
+	EXP %%'A>
+
+DEFINE PDSEND(A)<
+	LIT
+	VAR
+	.REL (\.%.BLK,\<.%.BLK-1>,0)
+	IFB	<A>,<...==0>
+	IFNB <A>,<...==A>
+	DEPHASE
+..CORE:
+	%==0
+	REPEAT .%.BLK,<
+	..TBL (\%)
+	%==%+1>
+	...
+	PURGE END,ORG
+	SYN %ORG,ORG
+	>
+	DEFINE %END(A)<
+	  PDSEND <A>
+	  END>
+
+
+	IFNDEF %UNIV%,<
+	SYN %END,END
+.CORE:
+	RELOC	0
+	INTERN	.CORE,..CORE
+
+.HWFRM	; half word format.
+SALL	; suppress expansions.
+	> ; end ifdef %univ%.
+	IFDEF %UNIV%,< END >
+
+LIST
