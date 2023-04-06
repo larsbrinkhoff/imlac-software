@@ -9,6 +9,11 @@ The Imlac computers were a family of 16-bit minicomputers.
 The early hypertext system FRESS (File Retrieval and Editing System)
 nas been preserved, but it's unclear whether the Imlac client has.
 
+## Case Western Reserve University
+
+Imlac Graphics Monitor for the Display Subroutine Library used at
+Project LOGOS.
+
 ## CERN
 
 Sadly, no CERN software has been preserved.  Included are two photos
