@@ -1,5 +1,9 @@
-Files from Rob Gingell.  The following are excerpts from private
-communiation:
+Files from Rob Gingell.
+
+To build these files, see [building.md](building.md).
+
+
+The following are excerpts from private communiation:
 
 ---
 
