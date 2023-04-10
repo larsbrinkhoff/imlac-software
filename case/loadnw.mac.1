@@ -1,0 +1,44 @@
+	TITLE	LOADER - Core Resident Loader for TOPS-10
+	Subttl	Not the same as TENEX
+
+	Search	PDSDEF
+
+	Sall
+
+	ADDR=13
+	CNT=10
+
+
+	Org 	40
+	Rcf			; Initialize
+	Sta			; Initialize start
+	Dac	ADDR		;   to zero
+WAIT:	Cal			; Clear the world
+	Rsf			; Anything there?
+	Jmp	.-1		; Nope, wait
+	Rrc			; Get character
+	Ral	2		; Shift
+	Ral	3		;   it
+	Ral	3		;     high
+	Rsf			; Anything else
+	Jmp	.-1		;   Wait for it
+	Rrc			; Get it in
+	Asn			; Zero (EOF)?
+	Jmp	101		; Yup, go start up
+	Dac	CNT		; Save the length
+LOOP:	Nop			; Display the address
+	Rsf			; Wait for 
+	Jmp	.-1		;   first byte
+	Cal			; Clear it now
+	Rrc			; Get it
+	Ral	2		; Shift
+	Ral	3		;   it
+	Ral	3		;     high
+	Rsf			; Get
+	Jmp	.-1		;   the
+	Rrc			;     next
+	Dac	@ADDR		; Deposit it
+	Isz	CNT		; Done?
+	Jmp	LOOP		; Nope, keep going
+	Jmp	WAIT		; Yup, get next block
+	End

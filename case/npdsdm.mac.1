@@ -1,0 +1,58 @@
+	Title	PDSDMP
+	Subttl	Loader for TOPS-10
+
+	A=1
+	B=2
+	C=3
+	D=4
+	P=17
+
+	Search	UUOSYM
+
+	Extern	.CORE,..CORE
+
+START:	RESET				; Reset the world
+	Move	P,[Xwd -4,PLIST]	; Set up P
+	OUTSTR	[Asciz	/
+You have 30 seconds to move cord.
+/]					; Tellem to go
+	Movei	A,^D30			; Sleep
+	SLEEP	A,			;   for 30 seconds
+	Hllz	B,..CORE+3		; Get amount in second page
+	Sub	B,[Xwd 3777,0]		; Add base page amount
+	Addi	B,.CORE			; Displace it
+	Hlro	D,B			; Get the count
+	Addi	D,10			; Displace it
+	Movem	D,10(B)			; Store it back
+	Movei	D,13			; Get the index
+	Movem	D,13(B)			; Store it too
+	Pushj	P,LOADIT		; Send this out
+	Movei	C,0			; Send out EOF block
+	Pushj	P,SEND			; Do it
+	Movei	A,10			; Sleep
+	SLEEP	A,			;   a little more
+	EXIT				; And then leave
+
+LOADIT:	Hlro	C,B			; Get the length
+	Pushj	P,SEND			; Send the word
+LOAD$0:	Move	C,0(B)			; Get the word pointed
+	Pushj	P,SEND			; Send the word
+	Aobjn	B,LOAD$0		; Done??
+	Popj	P,0			; Yup, split
+
+SEND:	Lshc	C,-^D8			; Shift it down
+	Pushj	P,SENDCH		; Send the byte
+	Lshc	C,^D8			; Get it back
+SENDCH:	Andi	C,377			; Mask off garbage
+	IONEOU	C			; Send it
+	Movei	A,1			; Get 1 ms sleep
+	HIBER	A,			; Zzzz...
+	HALT				; No sleep!!!?
+	Popj	P,			;   then return
+
+PLIST:	Block	5			; Pushdown Area
+
+ABLOK:	.TOSOP				; Skip if output buffer empty
+	0				; Filled in
+
+	End	START

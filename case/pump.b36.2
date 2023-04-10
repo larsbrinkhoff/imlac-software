@@ -1,0 +1,21 @@
+module pump(main = pump) =
+begin
+
+library 'BLI:MONSYM';
+library 'BLI:JSYLIB';
+
+routine pump : novalue =
+begin
+    local c;
+
+    while (1) do
+    begin
+	psout__('Character: ');
+	nin__($PRIIN, c, 8);
+	psout__(%string(%char(13,10)));
+	while sibe__($PRIIN) do
+	    bout__(%o'400153', .c);
+    end;
+end;
+
+end eludom

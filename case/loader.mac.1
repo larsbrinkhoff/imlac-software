@@ -1,0 +1,45 @@
+    TITLE LOADER - core resident loader for imlac pds-1.
+
+    Search pdsdef
+    Sall
+
+    Org  40
+
+L:  Iof
+    Lac  0
+    Iac
+    Asz
+    Jmp  .-2
+    Rcf
+L1: Law  cnt-1
+    Dac  adr
+    Cal
+W:  Xam  adr
+    Rsf
+    Jmp  .-1
+    Xam  adr
+    Ral  2
+    Ral  3
+    Ral  3
+    Rrc
+    Lsn
+    Jmp  w
+    Xam  cksm
+    Add  cksm
+    Xam  cksm
+    Dac  @adr
+    Dac  @adr
+    Opr  15
+    Isz  cnt
+    Jmp  w
+    Isz  cksm
+    Hlt
+    Jmp  @jadr
+
+
+cnt=10
+cksm=11
+jadr=12
+adr=13
+
+    End
