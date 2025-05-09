@@ -1,0 +1,13 @@
+	Search	MONSYM
+START:	Movsi	1,1
+	Hrroi	2,[Asciz /TTY153:/]
+	GTJFN%
+	 Halt
+	Move	2,[10b5+10b11+OF%RD+OF%WR]
+	OPENF%
+	 Halt
+	Movei	2,362
+	BOUT%
+	HALTF%
+	 Jrst	.-1
+	End	START

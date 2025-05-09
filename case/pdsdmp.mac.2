@@ -1,0 +1,223 @@
+	TITLE	DUMP -- IMLAC  core image loading subroutine.
+;	SUBTTL	TENEX version. (2)  27-May-72  T. Brenneman.
+;	SUBTTL	TENEX version. (3)  3-Aug-72  T. Brenneman
+;	SUBTTL	TENEX version. (4)  27-May-72  M. Somos
+;	SUBTTL	TENEX version. (5)  21-Feb-73  T. Brenneman
+	Subttl	TENEX/TOPS-10 Version  13-Jul-76  R. Gingell
+	; Changed for updated loader.
+
+;  Define acs.
+
+Z=4
+Z1=5
+A=6
+B=7
+C=10
+SC=11
+W=12
+ADR=13
+CNT=14
+P=17
+
+	TENEX=1
+;
+;	Conditional assembly switch
+;
+
+Ifn TENEX <
+	Search	MONSYM
+>
+Ife TENEX <
+	Search  UUOSYM
+>
+EXTERN	.CORE,  ..CORE
+
+
+LBLOCK:	EXP	-400		; Maximum length of blocks.
+LOADER:	EXP	45		; loader restart address-1.
+LEADER:	EXP	6		; 6 blank frames between blocks.
+OJFN:	EXP	0		; Output JFN number.
+
+	ENTRY DUMP
+DUMP:	RESET
+	MOVE	P,[XWD -4,PLIST]
+Ifn TENEX <
+	HRROI	1,[ASCIZ \
+Teletype:  \]
+	PSOUT
+
+	MOVSI	1,460003
+	MOVE	2,[100,,101]
+	GTJFN
+	JRST	DUMP
+	MOVEM	1,OJFN
+	MOVE	2,[100000,,100000]
+	OPENF
+	JRST	DUMP
+>
+ASKB:
+Ifn TENEX <
+	HRROI	1,[ASCIZ \
+Break IMLAC program?  \]
+	PSOUT
+	PBIN
+>
+Ife TENEX <
+	OUTSTR	[Asciz /
+Break IMLAC program? /]
+	INCHRW	1
+>
+	Andi	1,137
+	Movei	z, -"N"(1)
+	Jumpe	z,askbn		; answer is no.
+	Caie	z,"Y"-"N"	; is answer yes?
+	Jrst	askb		; no.  ask again.
+Ifn TENEX <
+	Skipa	2,[ascii/es?/]
+ASKBN:	Movsi	2,(ascii /o?/)
+	Hrroi	1,2
+	PSOUT
+	PBIN
+>
+Ife TENEX <
+	Skipa	2,[Asciz/es./]
+ASKBN:	Move	2,[Asciz/o./]
+	OUTSTR	2
+	INCHRW	1
+>
+	Andi	1,177
+	Caie	1,37
+	Cain	1,15
+	Caia
+	Jrst	askb
+Ife TENEX <
+	OUTSTR	[Asciz /You have 30 seconds to move cord!
+/]
+Movei	1,^D30		; Wait for him
+	SLEEP	1,		; Right here
+>
+	Jumpe	z,dst		; answer was no.
+
+	MOVEI	Z,34
+	PUSHJ	P,FRAME
+	MOVEI	Z,3
+	PUSHJ	P,FRAME
+	MOVEI	Z,34
+	PUSHJ	P,FRAME
+Ifn TENEX <
+	MOVEI	1,^D1000
+	DISMS
+>
+Ife TENEX <
+	Movei	1,1
+	SLEEP	1,
+>
+
+DST:	MOVEI	W, ..CORE
+
+GO:	SKIPL	(W)
+	JRST	GO2
+
+GO1:	HRRZ	ADR, (W)	; get address to load into.
+	HLRE	CNT, (W)	; get word count for this block.
+	MOVEM	CNT, SCNT#	; save for fixing W later.
+
+BLOCK1:	JUMPGE	CNT,BLKDON	; this block done?
+	MOVE	C, CNT
+	CAMGE	C, LBLOCK
+	MOVE	C,LBLOCK	; no blocks longer then (LBLOCK) words.
+	SUB	CNT, C		; update CNT.
+
+	PUSHJ	P,ONE		; punch leader, 1.
+	HRLZ	B, C		; make AOBJN word.
+	HRRI	B, .CORE (ADR)
+	MOVEM	B,SC		; save it for 2nd pass.
+
+	MOVEI	Z, -4(C)
+	PUSHJ	P, WORD		; punch word count.
+
+;  Add up checksum.
+
+	MOVE	Z, LOADER	; Jump address.
+	ADDI	Z, -1 (ADR) 	; address-1
+	ADD	Z, (B)		; + data.
+	AOBJN	B, .-1
+
+	SETCA	Z,
+	PUSHJ	P, WORD		; punch - checksum-1
+
+	MOVE	Z, LOADER
+	PUSHJ	P, WORD		; punch jump address.
+
+	MOVEI	Z, -1 (ADR)	; punch address-1.
+	PUSHJ	P, WORD		; NO COMMENT
+
+	MOVE	Z, (SC)
+	PUSHJ	P, WORD
+	AOBJN	SC, .-2		; punch data.
+
+	SUB	ADR, C		; add # of words just punched.
+				; ---C contains -(#)
+	JRST	BLOCK1		; do rest of this core block.
+
+BLKDON:	AOJA	W, GO
+;  See if we should punch a start block.
+
+GO2:	SKIPN	(W)
+	JRST	QUIT		; no.  all done.
+
+	PUSHJ	P,ONE		; yes.  punch leader.
+	MOVNI	Z, 3
+	PUSHJ	P, WORD		; punch word count. (=-3)
+	MOVN	Z, (W)
+	PUSHJ	P, WORD		; punch -(address-1)-1 = checksum.
+	MOVE	Z, (W)
+	SUBI	Z, 1		; (auto increments first)
+	PUSHJ	P, WORD		; punch address.
+
+;;;  All done!
+Ifn TENEX <
+QUIT:	SETO	1,
+	CLOSF
+	0
+	HRROI	1,[ASCIZ \
+^C
+
+\]
+	PSOUT
+	HALTF
+>
+Ife TENEX <
+QUIT:	OUTSTR	[Asciz/
+
+^C
+
+/]
+	Movei	A,5		; Sleep for a moment
+	SLEEP	A,		; To give them time...
+	EXIT
+>
+WORD:	LSHC	Z, -10
+	PUSHJ	P, FRAME
+	LSHC	Z, 10
+FRAME:	ANDI	Z, 377
+Ifn TENEX <
+	MOVE	1, OJFN
+	MOVE	2, Z
+	BOUT
+>
+Ife TENEX <
+	IONEOU	Z
+>
+	POPJ	P,
+
+ONE:	MOVEI	Z, 0
+	MOVE	Z1, LEADER
+	PUSHJ	P, FRAME
+	SOJG	Z1, .-1
+	MOVEI	Z, 1
+	JRST	FRAME
+
+PLIST:	BLOCK	4
+
+	END	DUMP

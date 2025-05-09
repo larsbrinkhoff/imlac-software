@@ -1,0 +1,2755 @@
+	SEARCH PDSDEF
+	Define	Save(a,b)<
+	lac	a
+	dac	b
+	>
+	Define	Savec(a,b)<
+	cla
+	xam	a
+	dac	b
+	>
+	Define	Pushf<
+	dac	@stack
+	lwc	1
+	add	stack
+	dac	stack>
+	Define	Popf(mem)<
+	isz	stack
+	lac	@stack
+	dac	mem>
+	Define	Popjf<
+	.popjf==.
+	define Popjf<	jmp	.popjf>
+	isz	stack
+	lac	@stack
+	dac	dtemp
+	jmp	@dtemp
+	>
+
+	OPDEF	SKP[2400]	; (=HSF). works since we don't have a ptr.
+
+;	DEFINE	INCR(A) < ISZ A >
+;
+;	DEFINE 	DECR(A) <
+;	XAM	A
+;	SUB	[1]
+;	XAM	A	>
+;
+	DEFINE	DSZ(A) <
+	LWC	1
+	ADD	A
+	DAC	A	>
+
+	DEFINE	JMP$(A,B) <
+		DEFINE	JMP'A(C) <
+			AS'B
+			JMP C	>>
+	JMP$(E,N)
+	JMP$(N,Z)
+;	JMP$(GE,M)
+	JMP$(L,P)
+;
+;	DEFINE	JMPLE(A) <
+;		ASZ
+;		ASP
+;		JMP A	>
+;
+;	DEFINE	JMPG(A) <
+;		ASZ
+;		ASP
+;		SKP
+;		JMP A	>		
+;
+;	DEFINE	CAME(A) < SAM A >
+	DEFINE	CAMN(A) < SAM A
+		SKP >
+;	DEFINE	CAMGE(A) < SUB A
+;		ASP >
+	DEFINE	CAML(A) < SUB A
+		ASM >
+;	DEFINE	CAMG(A) < SUB A
+;		ASZ
+;		ASP >
+;	DEFINE	CAMLE(A) < SUB A
+;		ASZ
+;		ASP
+;		SKP >
+;
+	DEFINE	JAMN(A,B) < SAM A
+		JMP B	>
+	DEFINE	JAME(A,B) < SAM A
+		SKP
+		JMP B	>
+	DEFINE	JAML(A,B) < SUB A
+		ASP
+		JMP B	>
+	DEFINE	JAMGE(A,B) < SUB A
+		ASM
+		JMP B	>
+;	DEFINE	JAMLE(A,B) < SUB A
+;		ASZ
+;		ASP
+;		JMP B	>
+;	DEFINE	JAMG(A,B) < SUB A
+;		ASZ
+;		ASP
+;		SKP
+;		JMP B	>		
+;
+	DEFINE	OP$B(OP) < IRP OP,<
+	DEFINE	OP'B(A) < OP 	A
+		DAC	A >	>>
+	OP$B	<ADD,SUB,AND,IOR,XOR>
+;
+	DEFINE	OP$I(OP) < IRP OP,<
+	DEFINE	OP'I(A) < OP [A] >>>
+	OP$I	<ADD,SUB,AND,IOR,XOR,SAM>
+
+;	DEFINE	CMME(A,B) < LAC A
+;		CAME	B >
+;	DEFINE	CMMN(A,B) < LAC A
+;		CAMN	B >
+;	DEFINE	CMML(A,B) < LAC A
+;		CAML	B >
+;	DEFINE	CMMGE(A,B) < LAC A
+;		CAMGE	B >
+;
+	DEFINE	JIME(A,B,C) < MOVEI A
+		JAME	B,C >
+;	DEFINE	JMME(A,B,C) < LAC A
+;		JAME	B,C >
+	DEFINE	JMMN(A,B,C) < LAC A
+		JAMN	B,C >
+	DEFINE	JMML(A,B,C) < LAC A
+		JAML	B,C >
+;	DEFINE	JMMGE(A,B,C) < LAC A
+;		JAMGE	B,C >
+;
+;	DEFINE	CMJE(A,B) < LAC A
+;		JMPE	B >
+;	DEFINE	CMJL(A,B) < LAC A
+;		JMPL	B >
+;	DEFINE	CMJN(A,B) < LAC A
+;		JMPN	B >
+;	DEFINE	CMJGE(A,B) < LAC A
+;		JMPGE	B >
+;
+	DEFINE	MOVEI(A) < A.=A
+		IFGE A.,<IFGE A.-4000,< LAC [A.] >
+			IFL A.-4000,< .LAW A. > >
+		IFL A.,<IFLE A.+4000,< LAC [200000+A.] >
+			IFG A.+4000,< .LWC -A. > >
+			>
+;		
+;
+;	DEFINE ROT(A)	< %==0
+;	A.==A
+;	IFL A.,< A.==-A.
+;		%==20 >
+;	ROTAT >
+;	DEFINE ROTAT < IFG A.,< IFLE A.-3,< RAL A.+% >
+;				A.==A.-3
+;				IFG A.,< RAL 3+%
+;					ROTAT >
+;			>	>
+;LIST
+;XLIST	; PARAM1  Version 9	(MS  1-dec-72)
+;
+;	DEFINE	SSUBE <JMS TESTS>	; see util.
+;	DEFINE 	SSUBN <JMS TESTS
+;			SKP>
+;	DEFINE	SREFE <JMS TESTR
+;			SKP>		; see util.
+;	DEFINE	SREFN <JMS TESTR>
+;
+	DEFINE	JNWR(A,B,L) <
+		JAML	[A],L
+		JAMGE	[<B>-<A>+1],L	>
+;
+	DEFINE	DISPLA(A)	<
+	LAC	[100000+DJMS. CH'A&7777]
+	JMS	DISP	>
+;
+;	DEFINE LNV(X,Y,Z) <
+;		X.=X
+;		X..=0
+;	IFL X.,<X.=-X.
+;		X..=40000>
+;		Y.=Y
+;		Y..=0
+;	IFL Y.,<Y.=-Y.
+;		Y..=20000>
+;		M.=X.
+;		N.=Y.
+;	IFG Y.-X.,<M.=Y.
+;		N.=X.+10000>
+;
+;	DLNV	<N.-M.>&7777
+;		M.+Z
+;		X..+Y..+N.	>
+;
+;	DEFINE	NSRT(A,B) <
+;	LAC	A'NAM
+;	AND	B'HTAB-1
+;	ADD	[B'HTAB]
+;	DAC	T
+;	LAC	A'P
+;	IAC
+;	XAM	@T
+;	DAC	@A'P
+;	LAC	A'NAM
+;	DAC	@A'P	>
+;
+;
+;	DEFINE	ARAY(L,C,A)	<
+;
+;	REPI	TAC,<L>-1
+;	REPI	CNT,-<C>
+;	MOVEI	A
+;	JMS	LODUP		>
+;
+;	DEFINE MES(R,A,B) <
+;	A.=<B.=0>
+;	IFNB <A>,<IFG <A.=A>-IMMAX,<IMMAX=A.>
+;	B.=IMBUF
+;	IFNB <B>,<B.=B>>
+;	EXP	R,<<-A.-1>&177777>,<<B.-1>&177777>>
+;
+;	DEFINE FORHSH(A) <MOVEI A-1
+;		DAC	HASHI >
+;
+;	DEFINE	PUSH(A,B) <
+;		ISZ A	
+;		LAC B
+;		DAC @A	>
+;
+;	DEFINE	POP(A,B) <
+;		LAC @A
+;		DAC B	
+;		DSZ A	>
+;
+;	DEFINE	IACD(A)	< IAC
+;		DAC A	>
+;
+	DEFINE	SKPRTN(A) < ISZ A
+		JMP @A >
+
+	DEFINE	ZERO(A) < CAL
+	IRP A,< DAC A >>
+
+	DEFINE	IND(A) < LAC @A
+		DAC A	>
+
+	DEFINE	INDA(A) < DAC A
+		LAC @A	>
+
+	DEFINE	REPL(A,B) < LAC B
+		DAC A	>
+
+	DEFINE	REPI(A,B) < MOVEI B
+		DAC A	>
+;
+;	DEFINE	REPAI(A,B) < ADDI B
+;		DAC A	>
+;
+;	DEFINE	REPSI(A,B) < SUBI B
+;		DAC A	>
+;
+	DEFINE	REPIA(A,B,C) < MOVEI C
+		ADD B
+	IFNB <A>,<DAC A> >
+;
+;	DEFINE	REPIS(A,B,C) < MOVEI C
+;		SUB B
+;	IFNB <A>,<DAC A> >
+;
+	DEFINE	REPLA(A,B,C) < IFNB <C>,<LAC C>
+		ADD B
+	IFNB <A>,<DAC A> >
+
+	DEFINE	REPLS(A,B,C) < IFNB <C>,<LAC C>
+		SUB B
+	IFNB <A>,<DAC A> >
+     	list
+;patches to IGM - enter as date,version number, what and who
+comment %
+8/12/74	CC15 added - *dsb*
+7/16/74	ENDDEF TOP ( AND (TOC) ) FIXED - DELETE BIT NOT REMOVED *DSB*
+7/16/74	lpsign, ifdsl, enddef timing, calp to xxxx fixed *dsb*
+5/2/74	dslform,sense,dmain(newhst timing problem),and cc2 fixed
+				;dsb  & d.risen.
+10/9/73	204	PROC ERROR MESSAGE,REMPIC SPEEDUP,CALNEW SYNC.
+		PROBLEM.		*DSB*
+11/9/73	203		ENTER PROBLEM,CALPIC F.DEF TIMIMG PROBLEM
+			TEXT 77 PROBLEM.
+11/9/73		202	DEFPIC "0" PATCH TO SUBPICTURE NAME
+10/8/73		201	all minor patches fixed		*dsb*
+2/4/74		13	DECAV PROBLEM FIXED	*DSB*
+3/15/74		14	SET SCALE PROBLEM AND SIZE OF TRACKING
+			BOX FIXED
+5/23/74			SPED UP INTERRUPT HANDLING IN WORST CASE
+			OF TTYIN INT. DURING AN INTERRUPT. *D. RISEN*
+5/30/74		holdup changed to 10 chara. lightpen sign *dsb*
+%
+     	LIST
+	; PARAM   Version 1   /Michael Somos   28-AUG-72
+	; PARAM   Version 2	/*DSB*		7322.1
+	Subttl Assembly Parameters
+
+	DEFINE AP(A,B) <IFNDEF A,<A==B>>
+
+	%N==200000		; for two's complement
+AP	COMPIN,"Q"-100		; complements pdp-10 input bit.
+AP	STOPIN,"S"-100		; stops pdp-10 input.
+AP	C.BLNK,CTRLF+"b"	; blank the screen
+AP	C.SWCH,CTRLF+"j"	; complement keyboard mode.
+AP	C.FORC,CTRLF+"p"	; force the next character.
+	HEIGHT==14		; height of characters
+	WIDTH==7		; width of characters
+	TIBL==100		; tty input buffer length
+	TOBL==10		; tty output buffer length
+	STRTUP==10		; chars delay before startup of input
+	HOLDUP==10		; chars delay before input buffer full
+
+	curdef=10		;current dictionary pointer
+	star=11		;
+	TIBP=13			; tty input buffer pointer
+	TOBP=14			; tty ouput buffer pointer
+	SUBP=15			; subroutine buffer pointer
+	start=16		;Graphics auto indices
+	endd=17			;Graphics auto indices
+
+	;Graphics parameters
+
+	toc==17777		;top of core
+	etsize==226		;150 definitions maximum
+	tbsize==200		;text buffer size in graphics mode
+	.entry==10640		;
+	dict.==break+tbsize+1	;start of subpicture dictionary
+	mdls==.entry+etsize+12	;
+	.dicts==<.entry-dict.-5>/3
+
+	TTYIF==10		; tty input interrupt bit.
+	TTYOF==40		; tty output interrupt bit.
+	SYNCF==2		; 40 cycle sync interrupt bit.
+	LPENF==1		; light pen interrupt bit.
+	ALLINT==TTYOF+TTYIF+SYNCF+LPENF		; all interrupt bits.
+
+	REPTF==2000		; repeat key value
+	CTRLF==1000		; control key value.
+	SHFTF==400		; shift key value.
+	cc17==reset	;have home key be manual reset from graphics
+	DJMS.=050000
+	DJMP.=060000
+	DLXA.=010000
+	DLYA.=020000
+     		title Logos Imlac Graphics Monitor	version V 
+
+	SALL
+
+	ORG 0	; when an interrupt occurs, the hardware steals a cycle
+		; simulates a JMS 0, and turns interrupts off.
+
+INTRPT:	BSS	1
+	JMP	INTHAN		; goto the interrupt handler.
+index:	pcrel		;udes for DEVOPR
+	pcabs	;
+	pcon	;
+	pcoff	;
+f.don:	0		;if not zero we are in graphics mode
+eleven:	11		;
+	org	20		;output character modes
+	outchar
+	outqlc
+	TEXTIN
+	outqlc
+EXIT:	law	2	;set normal tty mode bit
+	and	f.mode	;here and
+	jmp	.+3	;store the result
+.ENTER:	jms	intty	;remove dummy flush argument
+	law	2	;set normal
+	ior	f.mode	;graphics output mode
+	jms	setmode	;set tty output mode
+	jmp	endmes	;
+DCLEAR:	jms	initdl	;erase the screen
+	jmp	endmes	;thats all
+	
+loader:	jms	intty
+	iof
+	
+	ORG 100
+
+begin:	JMP	CONTIN		; power failure restart
+Reset:	iof		;interrupts off
+	lac	[17777]	;assume we will fill up 4k of display
+	dac	corend	;instructions - 8k is the limit
+	dac	tbend	;this is the actual address used in
+	lac	[break-toc]
+	dac	lstsiz	;
+	lac	[dnop]	;clearing the screenclear the Graphics 
+	dac	@[grafic];portion
+	lac	[flags-1];clear all flags
+	dac	start	;
+	lwc	nflags	;
+	jms	clearm	;
+	dac	f.don	;we are no longer in graphics mode
+	REPI	TIBP,TIBUF-1	 ; init tty input pointer
+	DAC	TUBP		; init tty unstuff pointer
+	REPI	TOBP,TOBUF-1	;
+	DAC	TSBP
+	DOF
+	JMS	INITDL		; init the disp list
+	REPI	WFOUT,TEXTO+1	; init wait for output char
+	REPI	INKBD,OUTLUP+1	; init wait for kbd char
+	REPI	INTTY,INLOOP+1	; init wait for input char
+	law	20	;set teletype to outchar mode
+	jms	setmode	;clears graphics mode, etc.
+	lac	initcurs	;initialize cursor
+	dac	@[mulcrs]	;b
+CONTIN:	lac	[dstart]
+	DLA			; load up display pc
+	LAW	ALLINT		; all devices
+	DAC	.ARMWD		; save device bits
+	ARM			; arm them.
+	RCF
+	TCF
+	LPCF
+	ION			; ready for interrupts.
+     		SUBTTL	main program loop
+
+Main:	lda		;read data switches
+	ral	1	;shift top bit into link
+	sar	1	;align everything up
+	dac	dtemp	;
+	asp		;bit#2=indirect bit
+	lac	@dtemp	;
+	dac	dtemp	;
+	lwc	30	;do null job
+	dac	dcnt	;save it in the countr
+	lac	@dtemp	;
+	isz	dcnt	;
+	jmp	.-1	;
+	lsz		;
+	iof		;interrupts off
+	lsz		;
+	jmp	main	;pause (bit#0 ) still on.
+	ion		;
+	CAL			; clear for testing
+	sam	f.wait	;can we process tty input?
+	jmp	keybd	;no check keyboard
+	SAM	F.TTYI
+	JAME	F.SPD,INPRO	; 
+keybd:	JAMN	F.KBDI,KBDPRO	; 
+	law	14		; this code tests for looping
+	sub	timeup		; display processor
+	asp			; 
+	jmp	reset		; reboot ***********
+	cla			;continue
+	SAM	F.REFR		; if refresh not needed
+	DSN			; or display still on,
+	JMP	MAIN		; then goto loop begin
+	sam	f.wait		;is there a graphics process
+	jmp	@dwait		;in the queue?
+dmain:	LPCF			;CLEAR THE FUGGER
+	sam	f.lpout		;are we in the middle of
+	skp			;transmission? -yes
+	jms	@[newhst]	;reset for new lpen history
+	DON
+	DAC	F.REFR		; clear refresh flag.
+	dac	f.wait		;clear display wait status
+	xam	timeup	;is time up  
+	rar	1	;set result into link
+	sam	f.blnk	;ac=0; are ther any b.v.?
+	lsn		;yes - see if time is up
+	jmp	main	;no keep waiting
+	lac	winkr	;sync bv
+	xam	f.bsync	;
+	dac	winkr	;
+	lac	f.mask	;
+	cma		;the only one in this code!
+	dac	f.mask	;
+	lac	f.mdlb	;get main display list b.v. count
+	asn		;skip code if none present
+	jmp	ddd	;
+	cia		;
+	dac	tmp	;sav its complement
+	lac	mblink	;this is the starting address-1
+	dac	star	;
+	jms	wink	;blink the vectors
+ddd:	lac	defcnt	;see if anything is there
+	sub	f.def	;remove # of floating defs
+	asn		;skip if something defined
+	jmp	main	;else done@
+	lac	[toc]	;start at the top
+	dac	npdp	;save base pdp
+	lac	@npdp	;get header pdp
+	dac	cpdp	;save the current pdp
+bbb:	lac	@cpdp	;and get the next one
+	ral	1	;get sign bit into link
+	sar	1	;
+	xam	cpdp	;update cpdp to new position
+	asn		;if old cpdp=0 then we are done
+	jmp	main	;
+	xam	npdp	;else update npdp
+	lsz		;skip if code deleted
+	jmp	bbb	;
+	sub	[1]	;ac=bvc address
+	dac	tmp	;tmp=bvc address
+	sub	@tmp	;ac=tmp-c(tmp)
+	dac	star	;star=bva1 -1
+	sub	TMP	;ac=bvc -c(bvc)-bvc
+	iac		;see if any are there
+	dac	tmp	;save bv count in counter
+	asz		;quick check to see if any exists
+	jms	wink	;wink them
+	jmp	bbb	;
+wink:	0		;blinking vector rouines
+	lac	@star	;get address of b.v.
+	dac	dtemp	;save it
+	LAC	F.MASK	;F.MASK=BIT TO COMPLEMENT
+winkr:	IOR	@dtemp	;complement bit
+	dac	@dtemp	;and store result
+	isz	tmp	;increment count
+	jmp	wink+1	;keep going
+	jmp	@wink	;return
+     	INTHAN:	DAC	USRAC		; SAVE AC
+	RAL	1		; LINK TO ACC
+	DAC	USRAC+1		; SAVE LINK
+DISMIS:	CAL	; CLEAR LINK AND ACC. RETURN HERE AFTER INT.
+			; TO QUICK CHECK FOR NEXT INTERUPT
+INTRSC:	RSN
+	JMP	TTYI
+	LPSF			; is there a light pen hit?
+	SKP
+	JMP	@[LPHIT]	; service it.
+	TSN			; have we finished tty output?
+	JMP	TTYO		; yes, find out what to do next.
+	KSN			; is there keyboard input?
+	JMP	KBDI		; yes, get it.
+	SSN			; did the alarm ring?
+	JMP	SYNC		; do the housekeeping chores.
+;		RETURN FROM INTERRUPT
+	LAC	USRAC+1
+	RAR	1		; RESTORE LINK
+	LAC	USRAC		; RESTORE ACC
+	ION			; enable interrupts
+	JMP	@iNTRPT		; return to interrupted program  
+     		SUBTTL	tty interrupt routines
+
+TTYI:	RRC
+	DAC	ICHAR		; save input char
+	ISZ	F.TTYI		; chalk one up for input buffer
+	JMMN	TIBP,[TIBE],.+1+2	; if at end
+	REPI	TIBP,TIBUF-1	; then recycle
+	LAC	ICHAR		; restore input char
+	DAC	@TIBP		; store in tty input buffer.
+	LAW	TIBL-HOLDUP
+	JAMGE	F.TTYI,DISMIS	; if buffer not too full then dismis
+	REPI	F.STOP,1	; input must be stopped
+	XAM	F.OACT		; set output active and
+	ASN			; if it was't then
+	JMS	OUTHAN		; make it so.
+	JMP	DISMIS
+
+TTYO:	TCF			; clear the flag.
+	JMS	OUTHAN		; do the actual tty ouput handling
+	JMP	DISMIS
+
+OUTHAN:	BSS	1
+	JMP	@WFOUT
+WFOUT:	BSS	1
+	JMP	@OUTHAN
+     		SUBTTL	output routines
+
+TEXTO:	JMS	WFOUT
+	JMMN	F.STOP,F.STPD,CNGBIT	; if not equal change it.
+	JMS	GETCHR
+	JMP	TEXTO		; if no more output then goto sleep
+OUT:	TPC
+	JMP	TEXTO
+
+GETCHR:	BSS	1
+	JMMN	TOBP,TSBP,GETCH1	; if unequal then output.
+	ZERO	F.OACT		; flag output not active
+	JMP	@GETCHR		; return the bad news
+GETCH1:	JMMN	TOBP,[TOBE],.+1+2
+	REPI	TOBP,TOBUF-1
+	LAC	@TOBP
+	SKPRTN	GETCHR
+
+CNGBIT:	DAC	F.STPD
+	ASN
+	JMP	.+3
+	LAW	STOPIN
+	JMP	OUT
+	LAW	COMPIN
+	JMP	OUT
+     	
+	SUBTTL	keyboard input
+
+KBDI:	DAC	F.REPT		;
+	KRC			;
+	ANDI	REPTF-201	; strip off repeat bit
+	DAC	KCHAR		; one character buffer is sufficient
+	ISZ	F.KBDI
+	JMP	DISMIS
+
+     		SUBTTL	clock interrupt routine
+
+SYNC:	SCF			; clear the flag
+	ISZ	F.REFR		;
+	ISZ	TIME		; time up?
+	JMP	CKREPT		; no,
+	LAC	WCURS		;
+	CAMN	@[DBLINK]
+	REPL	@[DBLINK],[DNOP]
+	repi	time,-12
+	isz	timeup	;time is up!
+CKREPT:	CLA
+	KRB
+	ANDI	REPTF
+	JMPN	.+1+2
+	DAC	F.REPT
+	JMP	DISMIS
+	ISZ	F.REPT
+	ISZ	F.KBDI
+	JMP	DISMIS
+     		SUBTTL	tty input processing
+
+INPRO:	iof		;interrupts off
+	DSZ	F.TTYI		; DSZ is not primitive like ISZ.
+	ion		;rearm interrupts
+	LAW	STRTUP
+	JAML	F.TTYI,INPRO1	; skip code if buffer not emptying.
+	ZERO	F.STOP
+	SAM	F.STPD
+	JMS	OUTACT		; make sure output active
+INPRO1:	JMMN	TUBP,[TIBE],.+1+2
+	REPI	TUBP,TIBUF-1
+	ISZ	TUBP		; simulate auto increment
+	LAC	@TUBP		; get character from buffer
+	JMP	@iNTTY		; return from input wait
+
+INTTY:	BSS	1
+	cla		;see if there was a graphics
+	sam	f.wait	;armed
+	jmp	dmain	;yes turn display on
+	JMP	MAIN
+INKBD:	BSS	1
+	JMP	MAIN
+     		SUBTTL	input loop
+
+	dac	f.don		;
+INLOOP:	JMS	INTTY		; input a character
+	and	[177]	;we want only 7 bits
+	JAME	[34],GIMT	; if message header, then get type
+	JMS	OUTDSP		; put it on the screen
+	JMP	INLOOP
+endmes==inloop
+Gimt:	jms	intty	;
+	and	[77]	;get significant bits
+	sub	eleven	;subtract 11 to see if we can
+	asp		;process the graphics command
+	jmp	mok	;message ok
+	xam	f.don	;are we in graphics mode if so ok
+	asn		;skip if we are
+	jmp	endmes-1;
+	xam	f.don	;restore the vale
+mok:	add	[gproc+11];index into table
+	dac	proc	;save address
+	sub	[procend]
+	asm		;see if it is proper
+	jmp	endmes	;might be transmission error - ignore
+	lac	@proc	;find right address
+	dac	disp	;
+	jmp	@disp	;it is ok - now go to it
+     		SUBTTL	simulated teletype
+	
+OUTDSP:	BSS	1		; display character on the screen
+	AND	[177]		; truncate to 7 bits.
+	DAC	TMP
+	JNWR	10,15,NOTSPC	; not special character.
+	REPLA	TMP,[SPCTAB+6]
+	IND	TMP
+	JMP	@TMP
+NOTSPC:	REPIA	TMP,TMP,CHTAB
+	IND	TMP
+	JMPE	@OUTDSP		; if it has no routine then ignore
+	JMS	STORD		;
+	NOP
+	LAC	TMP		;
+	JMS	DISP		;
+	ISZ	COLUMN		; update column
+	JMP	@OUTDSP		;
+
+Disp:	0		;put a word into the text buffer
+	xam	f.spd	;if this is up, don't display
+	asz		;anything
+	jmp	@disp	;just return if this is the case
+	xam	f.spd	;get it back
+	xam	dlend	;display end word first
+	dac	@dlp1	;save it first
+	isz	dlp1	;ready it for next time
+	xam	dlend	;restore instruction
+	dac	@dlp	;
+	isz	dlp	;store it for next time
+	isz	lstsiz	;any more room?
+	jmp	@disp	;yes - so return
+	jms	stop	;display infinity sign
+	jmp	@disp	;return
+
+STORD:	BSS	1
+	JMML	COLUMN,LENGTH,@STORD	;
+	LAC	[100000+DJMS. CRLF&7777]	; add cr lf sequence
+	JMS	DISP		; put in disp list
+	ZERO	COLUMN		; reset column position
+	ISZ	LINE		;
+	LAC	LINE		;
+	CAML	LINES		;
+	JMS	STOP		;
+	SKPRTN	STORD
+     		SUBTTL	special character routines
+
+SPC10:	REPIA	,COLUMN,-1	; backspace.  backup column
+	JMPL	@OUTDSP		; gone negative then ignore
+	DAC	COLUMN
+	lac	dlp		;backspace everything
+	dac	dlp1		;
+	sub	[1]	;
+	dac	dlp	;write over the last display inst.
+	lac	dlend	;
+	dac	@dlp	;backspace
+	JMP	@OUTDSP		; return.
+
+SPC11:	LAC	COLUMN		; tab. compute column to tab to
+	SAR	3
+	IAC
+	SAL	3		; round up to multiple of 8.
+	XAM	COLUMN		; save as column postion.
+	SUB	COLUMN		; this is -<# spaces needed> .
+	REPLA	TMP,TAB		; tab exact # of spaces.
+	JMS	STORD
+	SKP
+	JMP	@OUTDSP
+	LAC	TMP
+	JMS	DISP		; display tab subroutine
+	JMP	@OUTDSP		; yes.  dismis interrupt.
+
+SPC12:	DISPLA	12
+	ISZ	LINE
+	LAC	LINE
+	JMP	SPCCOM
+SPC13:	DISPLA	13		; display vertical tab.
+	REPIA	LINE,LINE,4	; vt is 4 lines
+SPCCOM:	CAML	LINES		; are we over lines?
+SPC14:	JMS	STOP
+	JMP	@OUTDSP		; return.
+SPC15:	DISPLA	15		; display carriage return
+	ZERO	COLUMN		; clear column position.
+	JMP	@OUTDSP		; return.
+
+STOP:	BSS	1
+	ISZ	F.SPD		; set input suppressed
+	REPI	WCURS,DJMS ECUR	; substitute end of page cursor
+	JMP	@STOP
+     		SUBTTL	keyboard input processor
+
+KBDPRO:	ZERO	F.KBDI		; clear program flag
+	sam	kchar	;do not process null characters
+	skp		;
+	jmp	@inkbd	;
+	JAMN	F.REPT,CKFUNC	; if repeat then skip special
+ 	XAM	F.FORC		; clear force flag and
+	JMPN	CKMODE		; if was on then just check mode
+	JIME	C.BLNK,KCHAR,DOBLNK
+	JIME	C.SWCH,KCHAR,DOSWCH
+	JIME	C.FORC,KCHAR,DOFORC
+CKFUNC:	LAW	140
+	AND	KCHAR
+	JMPN	KBDPR1
+	LAW	37
+	AND	KCHAR
+	ADD	[CONTRO]
+	DAC	TMP
+	LAC	@TMP
+	DAC	TMP
+	JMPN	@TMP		; goto control routine
+KBDPR1:	CLA
+	XAM	F.REPT
+	JMPN	NOSWET
+CKMODE:	jmp	@[fudge]	;fudge characters 173-6 thru
+	LAC	KCHAR		; get character.
+	SAR	3		; shift over to 100 bit.
+	SAR	3		;
+	RAR	1		; 100 bit into link.
+	LSN			; char .ge. 100 ?
+	JMP	NOSWET		; no.
+	IOR	F.35		; yes. make 7 bit index.
+	ADDI	MAGIC		; get magic entry address.
+	INDA	TMP		; get magic entry.
+	XOR	KCHAR		; apply it.
+	SKP			; fall into return.
+NOSWET:	LAC	KCHAR
+	ANDI	177		; truncate to 7 bits.
+ENDK:	DAC	KCHAR
+	SKPRTN	INKBD		; skip return with keyboard char
+     	DOSWCH:	LAW	1
+	XORB	F.35
+	REPLA	TMP,[ULCURS]
+	REPL	@[MULCRS],@TMP
+	SKP
+DOFORC:	ISZ	F.FORC
+	SKP
+DOBLNK:	JMS	INITDL
+CCRETN:	CLA
+	DAC	KCHAR
+	JMP	@iNKBD		; non-skip return without character
+cc2:	law	112	;send cursors position
+	jms	@[dslout]
+	lac	@[boxx]	;get x position
+	and	[1777]	;strip off garbage bits
+	jms	@[dslform]
+	lac	@[boxy]	;get y position
+	and	[1777]	;and off garbage bits
+	jms	@[dslform]
+	jmp	ccretn	;thats all
+CC4:	REPLS	YCUR,CURINC,YCUR
+	JMP	CCDIR
+CC5:	REPLA	XCUR,CURINC,XCUR
+	JMP	CCDIR
+CC6:	REPLA	YCUR,CURINC,YCUR
+	JMP	CCDIR
+CC10:	REPLS	XCUR,CURINC,XCUR
+CCDIR:	jms	@[curupd]
+	JMP	@iNKBD		; non-skip return w/o character
+cc14:	law	1		;complement local bit
+	xor	f.mode	;
+	jms	setmode	;set the mode of tty output
+	jmp	ccretn	;
+
+cc15:	law	22	; if we are doing TEXTIN hand back
+	sam	f.mode	; 37 instead of 15
+	jmp	noswet	; we are ok
+	law	37	;
+	jmp	endk	;
+
+CC34:	LAC	CURINC
+	SAM	[1000]
+	SAL	1
+	DAC	CURINC
+	JMP	CCRETN
+CC35:	LAC	SVTRAK
+	xam	@[back]
+	DAC	SVTRAK
+	JMP	CCRETN
+CC36:	LAC	CURINC
+	SAR	1
+	ASN
+	LAW	1
+	DAC	CURINC
+	JMP	CCRETN
+CC37:	LAW	177
+	JMP	ENDK
+     		SUBTTL	output loop
+
+OUTLUP:	JMS	INKBD
+	JMP	.-1		; not displayable, try again.
+	JMS	@MODEs	; display or output.
+	JMP	.-3
+
+MODES:	outchar
+Setmode:0		;set teletype output mode
+	dac	f.mode	;save the current mode
+	lac	@f.mode	;get routine address
+	dac	modes	;save the mode s address
+	jmp	@setmode;mode has been set
+
+outchar:	BSS	1		; output char subroutine
+	DAC	OCHAR
+	JMMN	TSBP,[TOBE],.+1+2
+	REPI	TSBP,TOBUF-1
+	LAC	OCHAR
+	ISZ	TSBP		; simulate auto increment
+	DAC	@TSBP		; stuff char in buffer
+	JMS	OUTACT
+	JMP	@outchar
+
+OUTACT:	BSS	1		; make sure output is active
+	iof			; we are about to simulate an interrupt
+	LAW	1		; we want to set F.OACT to 1
+	XAM	F.OACT		; set F.OACT_1 and load original value.
+	ASN			; was output active?
+	JMS	OUTHAN		; no, simulate an interrupt
+	ion			; end simulation
+	JMP	@OUTACT
+     	Dwait:	0		;routine to wait until display
+	isz	f.wait	;is done
+	jmp	main	;similar to a long no operation,but better
+Crunch:	0		;crunch core routine
+	cla		;see if anything was deleted
+	sam	f.del	;if f.del=0 then do nothing ad 
+	skp		;return
+	jmp	@crunch	;
+	dac	f.del	;
+	jms	dwait	;wait until display is done
+	save	com3,y1	;push com3,
+	save	countr,y2;push countr
+	save	address,y3;push address
+	save	addr,y4	;push addr
+	lac	[toc]	;load top of core =17777
+	dac	cpdp	;cpdp==Current Previous Definition Pointer
+crunc:	xam	cpdp	;update cpdp and get previous one
+	dac	top	;this is the  official top
+	lac	@cpdp	;get next pdp
+	asm		;should we delete this one?
+	jmp	crunc	;no search for first deleted on
+Crun1:	and	[77777]	;ignore sign (deletion bit)
+	asn		;ave we at the end of the list?
+	jmp	out2	;yes - get out of here
+	xam	cpdp	;store current and get previouspdp
+	dac	npdp	;previous pdp=npdp
+Crun4:	lac	@cpdp	;look ahead
+	asp		;do we delete it?
+	jmp	crun1	;see if we are done
+	xam	cpdp	;update and get top of definition to 
+	asn		;was the previous cpcp=0
+	jmp	out2	;yes - time to exit
+	xam	npdp	;one to save
+	dac	com3	;com3 is the very end+1 of the code
+	sub	top	;to save
+	cia		;complement
+	dac	distance;this is the distance we have to
+	lac	npdp	;find the size of the bugger
+	sub	com3	;ac has twos complement of size
+	dac	countr	;now countr has it
+	law	2	;form a djmp to this address
+	add	npdp	;so we can identify it and translate
+	xor	[70000]	;all tags and calls
+	dac	star	;
+crun3:	jms	blt	;do a block transfer now
+	lac	[.entry-1]
+	xam	star	;
+	sam	@star	;
+	jmp	.-1	;
+	lac	star	;get right address
+	jms	i.d.	;identify
+	lwc	1	;point addr to the entry address
+	add	addr	;
+	dac	entrie	;update entry djmp
+	lac	@entrie	;
+	dac	entrie	;entry points then entry table
+	lwc	1	;translate bvs too
+	add	top	;
+	dac	dtemp	;
+	lac	@dtemp	;
+	cia		;
+	dac	xxxx	;
+	iac		;
+	add	dtemp	;
+	dac	dtemp	;
+	jms	trans	;translate all tags
+	law	2	;update new entry address
+	add	stops	;
+	xor	[70000]	;form a djmp
+	dac	@entrie	;
+	lac	stops	;update top and its link
+	dac	@top	;update link
+	dac	top	;
+	jmp	crun4	;no
+out2:	dac	@top	;clear pdp
+	sam	f.def	;do we have to move som vectors
+	jmp	out3	;yes
+out4:	save	y1,com3	;restore previous conditions
+	save	y2,countr	;pop countr
+	save	y3,address	;popaddress
+	save	y4,addr		;pop addr
+	cla		;
+	sam	f.def	;compenstte for vectores
+	lac	@vecnt	;load vector count
+	add	ddlp1	;
+	sub	top	;
+	dac	avcore	;
+	jmp	@crunch	;
+out3:	lac	@vecnt	;get # of words to move
+	cia		;
+	dac	countr	;
+	law	1	;get com3 ready
+	add	vecnt	;stops is already set
+	dac	com3	;
+	sub	top	;insure right distance
+	cia		;
+	dac	distance;
+	add	vecpnt	;update pointers
+	dac	vecpnt	;
+	sub	countr	;point to vecnt
+	dac	vecnt	;
+	jms	blt	;
+	jmp	out4	;continue from here
+     		Subttl Graphics Screen initialization Routines
+INITDSL:lac	[break+tbsize]
+	dac	mblink	;init blinking mdl pointer
+	dac	f.don	;remember we are in graphics mode
+	iac		;
+	dac	corend	;this is all the room normal
+	dac	tbend	;this is also the text buffer end
+	law	gflags-1;text gets
+	dac	start	;clear all graphics flags and
+	lwc	gnflag	;anything else that might need it
+	jms	clearm	;
+	lac	[.ENTRY-1]	;clear entry table
+	dac	start	;
+	dac	stack	;initialize stack
+	lwc	etsize+1;entry table size
+	jms	clearm	;clear entry
+	lac	[mdls-dsload];move everything necessary
+	dac	distance	;into upper 4k
+	lac	[dsload]	;
+	dac	com3	;ready for blt
+	lwc	11	;
+	dac	countr	;
+	jms	blt	;
+	lac	[mdls]	;table
+	dac	ddlp	;init. core stuffers
+	iac		;
+	dac	ddlp1	;
+	sub	[toc]	;find amount of available core
+	dac	avcore	;
+	lac	dend	;store a dend here
+	dac	@ddlp	;
+	lac	[djmp. <mdls&7777>]
+	dac	@[grafic]
+	lac	[toc]	;
+	dac	top	;init. top pointer
+	cla		;
+	dac	@top	;here
+	jms	setcur	;set curdef.
+	jms	initdl	;init display (regular text)
+	lac	@[maindl]	;reset text scale size
+	dac	tss	;
+	law	20	;reset tty mode
+	jms	setmode	;
+	jmp	endmes	;good bye
+Initdl:	0		;
+	cla		;
+	dac	line	;clear the screen and reset everything
+	dac	column	;necessary
+	dac	f.spd	;
+	lac	[break]	;
+	dac	dlp	;init text pointers
+	iac		;
+	dac	dlp1	;
+	sub	tbend	;subtrack text buffer end
+	add	f.mdlb	;adjust for blinking vectores
+	dac	lstsiz	;
+	lac	dlend	;clear the screen right here
+	dac	@dlp	;
+	lac	[djms. cursor]
+	dac	wcurs	;
+	jmp	@initdl	;return
+     		Subttl	Graphics Utility Routines
+Subs:	0		;substitution routine
+	lac	top	;do definition area now
+	dac	start	;
+	sub	[toc]	;counter=-(toc-top)
+	dac	countr	;
+	cla		;do main display list forst
+	dac	subcnt	;subcnt=substitution count
+	jms	dwait	;wait until display is done
+	jms	.subs	;do actual substitution here
+	lac	[mdls-1];mdls=main display list start
+	dac	start	;com2=whatto search for
+	sub	ddlp	;com3=what to substitute
+	dac	countr	;
+	jms	.subs	;do actual substitution here
+	jmp	@subs	;return
+.subs:	0		;search and substitute routine
+	lac	com2	;load what to search for
+.subs1:	sam	@start	;lets see
+	skp		;not a match
+	jmp	.subs2	;substitute it
+.subs3:	isz	countr	;arewe done searching?
+	jmp	.subs1	;no keep searching
+	jmp	@.subs	;yes -return
+.subs2:	lwc	1	;ac=-1
+	add	start	;
+	dac	start	;
+	lac	com3	;pick up substitution
+	dac	@start	;substitute it
+	lac	com2	;pick up search parameter
+	isz	subcnt	;increment substitution count
+	jmp	.subs3	;continue
+Decrcm:	0		;decrement RC multiple
+	lac	param1	;get the mane of the subpicture
+	jms	refcnt	;get its reference count
+	jmp	@[error4]	;fatal error most likely
+	and	f.lock	;zero rc
+	dac	@addr	;update rc
+	asn		;skip if not zero
+	jms	delete	;delete reference
+	jmp	@decrcm	;return
+     		Subttl Graphics Utility Subroutines
+.disp:	0		;put a word intothe display list
+	jms	decav	;decrement the amount of available core
+	xam	f.def	;see if it is ok to put on 
+	asz		;screen
+	jmp	.+3	;
+	sam	f.dwdo	;if 0, then f.dwdo=0, else
+	jmp	@.disp	;error return
+	xam	f.def	;get it back
+	xam	dend	;will haveto be taken
+	dac	@ddlp1	;store end first
+	isz	ddlp1	;ready ddlp1 for next time
+	xam	dend	;get instruction back
+	dac	@ddlp	;store instruction
+	isz	ddlp	;
+	jmp	@.disp	;return
+decav:	0		;increment available core
+	isz	avcore	;
+	jmp	@decav	;there is some room left
+	dac	dtemp	;save display instruction
+	jms	Crunch	;crunch core toget some room
+	cla		;
+	sam	avcore	;ifavcore still 0 then 
+	skp		;start bitching
+	jmp	@[error2]	;no more core
+	lac	dtemp		;pick up the instruction
+	isz	avcore	;
+	jmp	@decav	;normal return - we gots some left
+	jmp	@[error2];no more core left
+Trans:	0		;translate tag call addresses
+	law	3	;update address topoint to next in
+Trans1:	add 	address	;dictionary
+	dac	address	;
+	add	[2]	;have addr point to rc
+	dac	addr	;
+	lac	f.tag	;look at both tags
+	and	@address;
+	asn		;if neither is therethen
+	jmp	ehoky	;return
+	lac	@addr	;
+	asn		;
+	jmp	ehoky	;
+	lac	distance;translate addresss of tags
+	isz	address	;
+	add	@address;add on previous address
+	dac	@address;replace new address
+	law	2	;point to next dictionary entry
+	isz	countr	;
+	jmp	trans1	;we are not doneyet
+	jmp	ehoky	;we are done now
+Hokay:	lac	@dtemp	;translate blinking vectors
+	add	distance;
+	dac	@dtemp	;
+	isz	dtemp	;
+ehoky:	isz	xxxx	;xxxx=number to trans. +1
+	jmp	hokay	;not done yet
+	jmp	@trans	;return
+     		Subttl Graphics Utility Subroutines
+I.D.:	0		;ac=enrty address, return name
+	dac	countr	;save address temporarily
+	lac	[dict.]	;
+	dac	start	;start=first dict. entry of addresses
+	lac	defcnt	;load #of definitions
+	cia		;get complement
+	asn		;make sure something is there
+	jmp	@i.d.	;if not - exit with zero
+	xam	countr	;pick up address
+i.d.a:	sam	@start	;do we have a match
+	skp		;nopt
+	jmp	foundit	;yes we found it
+	isz	start	;point to next entry
+	isz	start	;
+	isz	countr	;are we at the end of the dict.
+	jmp	i.d.a	;no
+	jmp	@[error4]	;this shouldn't occur
+Foundit:lwc	1	;
+	add	start	;
+	dac	address	;address points to name
+	add	[2]	;
+	dac	addr	;
+	lac	@address;ac=name of subpicture
+	jmp	@i.d.	;return
+Decrc:	0		;a recursive routine to decrement
+	xam	decrc	;the RC hand it a djms
+	pushf		;save the return address
+	lac	decrc	;now begin
+	xor	[40000]	;get entry address
+	jms	i.d.	;identify
+	xam	param1	;now push the previous param1
+	pushf		;to save for later use
+	lwc	1	;now decrement the RC
+	add	@addr	;
+	dac	@addr	;
+	asz		;skip if RC=0
+	jmp	..dec	;we don't delete it
+	jmp	dellink+1;we delete it. remove it from the 
+...d:	lac	param1	;list structure it is on
+	jms	search	;now ready for delete
+	jmp	@[error4];fatal error
+	jmp	del0	;recursive entry for delete
+..dec:	popf		;recursive returning point for delete
+	dac	param1	;restore previous conditions
+	popjf		;return
+Defref:	0		;define a reference
+	law	.dicts	;get dictionary size
+	sam	defcnt	;do they match?
+	skp		;no - ok to insert something
+	jmp	@[error3]	;dictionary is full - errorexit
+ 	lac	param1	;guess not
+	dac	@curdef	;put it into dictionary
+	lsn		;do we define an entry vector?
+	jmp	dr1	;no
+	lac	[.entry-1]
+	dac	start	;
+	cla		;a free entry is one that is zero
+	sam	@start	;keep searching till you find a free
+	jmp	.-1	;one
+	lac	start	;here is a free one
+	sam	[etsize+.entry];subpicture definition overflow
+	skp		;
+	jmp	@[error3]	;yes!
+dr2:	dac	@curdef	;save it
+	lac	rc	;get initial reference count
+	dac	@curdef	;
+	isz	defcnt	;increment definition size
+	jmp	@defref	;return
+dr1:	lac	ddlp	;
+	jmp	dr2	;for tags only
+;note : have entry table include 1 free space at the end
+;	to check deefinition subpicture overflow
+     		Subttl Graphics Utility Routines
+Refcnt:	0		;find reference countof subpicture
+	jms	search	;is it defined
+	jmp	@Refcnt	;no
+	add	[2]	;
+	dac	addr	;
+	lac	@addr	;
+	isz	refcnt	;skp return
+	jmp	@refcnt	;
+Refadd:	0		;get reference address (entry)
+	jms	search	;first of all is it defined
+	jmp	@refadd	;no
+	iac		;
+	dac	addr	;
+	lac	@addr	;
+	isz	refadd	;skp return
+	jmp	@refadd	;
+.search:
+Search:	0		;search dictionary for name (ac)
+	dac	start	;save name temporarily
+	lac	defcnt	;get # of definitions
+	asn		;is anything defined?
+	jmp	sea3	;no zero reference count
+	cia		;complement it
+	dac	countr	;
+	lac	[dict.-1];set address
+	add	name	;c(name)=0 normally - see cc16:
+	xam	start	;get name
+sea1:	sam	@start	;do we have a match
+	jmp	sea2	;no match yet
+	isz	search	;skip return
+	lac	start	;
+	dac	address	;
+	jmp	@search	;
+sea2:	isz	start	;update address to point to next name
+	isz	start	;
+	isz	countr	;
+	jmp	sea1	;we are not done yet
+	jmp	@search	;error return
+sea3:	lac	start	;restore name
+	jmp	@search	;error return
+Blt:	0		;block transfer routine
+	lwc	1	;decrement starting address
+	add	com3	;
+	dac	com3	;
+	add	distance;distance=distance to be moved
+	dac	stops	;update dumping address
+	lac	@com3	;move core now
+	dac	@stops	;stops is where to deposite
+	isz	countr	;are we done
+	jmp	blt+1	;no
+	jmp	@blt	;yes - return
+     		Subttl Graphics Utility Routines
+Delete:	0		;delete a reference ac=name
+Del0:	isz	f.del	;set deleted flag
+	lwc	1	;have address point to commperssion
+	add	address	;address for compacting the 
+	dac	endd	;dictionary
+	add	[2]	;have entrie point to the entry address
+	dac	entrie	;in tthe dictionary
+	lac	@entrie	;get it before it is gone
+	dac	entrie	;
+Del1:	lwc	1	;decrement the definition count
+	add	defcnt	;by one
+	dac	defcnt	;
+	law	3	;have address point to the 
+	add	address	;next name
+	dac	address	;
+	add	[2]	;have addr point to 
+	dac	addr	;the RC
+	isz	countr	;are we at the end of the 
+	skp		;dictionary
+	jmp	del3	;yes!
+	lac	f.tag	;remove all associated tags
+	and	@address;
+	asn		;if tag see if mdl tag
+	jmp	del2	;no thats all
+	lac	@addr	;
+	asz		;mdl tag has zero reference count
+	jmp	del1	;not mdl - keep going
+Del2:	lwc	1	;move core around
+	add	address	;that is just the dictionary
+	dac	start	;
+	lac	countr	;countr_countr*3
+	sal	1	;
+	add	countr	;
+	dac	countr	;
+	lac	@start	;compress dictionary here
+	dac	@endd	;
+	isz	countr	;
+	jmp	.-3	;
+Del3:	cla		;clear entrie position
+	xam	@entrie	;
+	xor	[70000]	;form actual sp address
+	dac	star	;
+	sub	[2]	;have addr point to pdp
+	dac	addr	;
+	lac	f.delb	;set delete bit
+	ior	@addr	;
+	dac	@addr	;
+Del4:	lac	@star	;look forcalls
+	sam	[drjm]	;are we at the end?
+	skp		;no
+	jmp	rtn	;yes
+	and	[170000];see ifit is a d jms
+	sam	[djms.]	;
+	jmp	del4	;
+Del5:	lac	star	;
+	dac	entrie	;
+	dac	@stack	;pushf star
+	lwc	1	;
+	add	stack	;
+	dac	stack	;
+	cla		;
+	xam	@entrie	;
+	jms	decrc	;decrement the call
+retn:	popf	star	;
+	jmp	del4	;
+Rtn:	lwc	2	;backup to dnop word
+	add	star	;
+	dac	star	;
+	lac	@star	;get contents of dnop word
+	sam	[dnop]	;is this in a list
+	jmp	del7	;yes - fancy work now
+del6:	jms	setcur	;everything is ok now
+	lac	[.entry-1];now do we return recursively or
+	sam	stack	;do we have a straight forward  return
+	jmp	..dec	;recursive return
+	jmp	@delete	;
+Del7:	xor	[30000]	;make into djms
+	dac	entrie	;save it temporarily
+	xor	[40000]	;get the entry address
+	jms	i.d.	;identify it
+	jms	getadd	;now get its dnop address
+	xam	countr	;counter was zero - we want to clear
+	dac	@countr	;any trace of a backpointer
+	lac	entrie	;
+	jms	decrc	;now decrement the reference count
+	jmp	del6	;evrething is ok now
+Setcur:	0		;set curdef
+	lac	defcnt	;
+	sal	1	;curdef=3*defcnt+.dict
+	add	defcnt	;
+	add	[dict.-1];
+	dac	curdef	;
+	jmp	@setcur	;
+     		Subttl Graphics Utility Routines
+Vector:	0		;insert a vector into the list
+	jms	@[gtword]	;get the arguments
+	xor	[174000];and extend the sign bit
+	add	[4000]	;
+	dac	param1	;
+	jms	@[gtword]	;
+	xor	[174000];
+	add	[4000]	;
+	dac	param2	;
+	jms	intty	;inputabs
+	rar	1	;shift agrument into link
+	lsz		;is it false (relative)
+	jmp	@vector	;no
+	isz	vector	;ready for skip return
+	jms	dwait	;wait until display is done
+	lac	param1	;generate long vector param1=x
+	asz		;check for zero vectors
+	skp		;not zero - ok
+	sam	param2	;it is zero see if this is the case also
+	skp		;no
+	jmp	@vector	;we generated it 0 vector
+	ral	1	;shift sign bit into link
+	lac	param2	;param2=y
+	rar	2	;shift signs into proper positions
+	and	[60000]	;
+	dac	com3	;
+	lac	param1	;pick up x
+	asp		;get absolute value
+	cia		;
+	and	[7777]	;12 bit significance
+	dac	m	;assume it is >abs(y)
+	lac	param2	;
+	asp		;do the same with y
+	cia		;
+	and	[7777]	;
+	dac	n	;assume it is n
+	sub	m	;ac=n-m
+	asp		;is it positive?
+	jmp	lngvct	;
+	xam	com3	;set abs(y)>abs(x) bit
+	ior	[10000]	;
+	xam	com3	;
+	xam	n	;swap(n,m)
+	xam	m	;
+	xam	n	;
+	cia		;ac=-(n-m)
+lngvct:	and	[7777]	;and off garbage bits
+	ior	[140000];or in significant ones
+	jms	.disp	;
+	lac	f.vmode	;see if we have an invis. vect.
+	sam	f.invis	;
+	skp		;it is visible we must check for
+	jmp	over3	;blinking vector flag
+	cal		;clear everything
+	sam	blink	;is this a blinking vector?
+	skp		;if so put into appropriate table
+	jmp	over3	;else skip this code
+	sam	f.def	;are we defining
+	jmp	vv1	;yes
+	lac	ddlp	;put this into the text buffer
+	dac	@mblink	;save and update position
+	lwc	1	;
+	add	mblink
+	dac	mblink	;
+	isz	f.mdlb	;increment #of blinking vectors
+	isz	lstsiz	;overflow?
+	jmp	over3-1	;no continue
+	jms	stop	;stop processing input
+	jmp	over3-1	;
+vv1:	isz	@vecnt	;increment vector count
+	jms	decav	;decrement the amount of available space
+	lac	ddlp	;
+	dac	@vecpnt	;store in vector pointer
+	lwc	1	;
+	add	vecpnt	;
+	dac	vecpnt	;update position of pointer
+	isz	F.BLNK	;just remember there  exists b.v.
+over3:	lac	m	;we've done the first word, now
+	ior	f.vmode	;
+	jms	.disp	;put it into the display list
+	lac	com3	;do the samefor the last on
+	ior	[100000];
+	ior	n	;
+	jms	.disp	;
+	jmp	@vector	;
+     	Posit:	0		;
+	lac	param1	;position beam
+	and	[7777]	;12 significant bits
+	ior	[dlxa.]	;
+	jms	.disp	;store coords now
+	lac	param2	;do same with Y
+	and	[7777]	;
+	ior	[dlya.]	;
+	jms	.disp	;
+	lac	[140000+mdls-7]
+	jms	.disp	;
+	jmp	@posit	;
+Clearm:	0		;clear core
+	dac	countr	;
+	cla		;clear accum.
+	dac	@start	;
+	isz	countr	;are we done yet?
+	jmp	.-2	;
+	jmp	@clearm	;return
+     		Subttl Graphics Procedures Level 0:
+DRAW:	cla		;form right word for beam type
+	sam	f.dot	;if beam dotted, then dont skip
+	ior	f.dotted;
+	ior	f.visible
+	dac	f.vmode	;
+	jms	vector	;
+	jmp	@[error1]	;wecannot draw to absolute
+	jmp	endmes	;
+MOVE.:	jms	moveb	;position the beam
+	jmp	endmes	;thats all
+moveb:	0		;move the beam invisible
+	lac	f.invis	;f.invis=100000
+	dac	f.vmode	;
+	jms	vector	;draw a vector
+	jms	posit	;position beam absolutely
+	jmp	@moveb	;return
+DOT:	jms	moveb	;same as move, but with adot after it
+	lac	[ddsp]	;load dot call
+	jms	.disp	;
+	jmp	endmes	;
+ENDPIC:	isz	f.dwdo	;raise display wait define only
+	jmp	endmes	;
+NEWPIC:	cla		;there are bound to be some strange 
+	sam	f.def	;user who clears the screen when
+	jmp	strange	;defining a subpicture
+	dac	f.dwdo	;clear this flag set by ENDPIC
+	dac	f.clear	;
+	dac	f.mdlb	;no more blinking mdl vectors
+	dac	tmp	;delete mdl tags
+	dac	avcore	;insure you can put it in
+	sam	defcnt	;release all calls on mdl
+	skp		;there are some
+	jmp	np1	;nothing defined - dont check
+	lac	[mdls]	;start here
+	dac	defref	;defref=addresss now
+	sub	ddlp	;get the number of display instructions
+	asn		;see if anything is there
+	jmp	np1	;guess not
+	dac	clearm	;clearm is our countr
+Bbk1:	lac	@defref	;
+	and	[170000]	;
+	sam	[djms.]	;
+	jmp	bbk	;
+	lac	@defref	;
+	jms	decrc	;djms instruction
+bbk:	isz	defref	;
+	isz	clearm	;
+	jmp	bbk1	;
+np1:	lac	[mdls]	;main display list start
+	dac	ddlp	;
+	iac		;
+	dac	ddlp1	;
+	lac 	dlp1	;release core used for mdl bliking 
+	sub	corend	;subtrack text buffer top
+	dac	lstsiz	;vectos
+	lac	dend	;clear main displaylist
+	dac	@ddlp	;clear screen here
+	lac	[7777]	;lock bit is 20000 law 3777
+	dac	exp1	;
+	jmp	exp3	;
+     	EXPUNGE:lac	[5777]	;ignore lock bit[LAW 1777]	
+	dac	exp1	;
+	dac	tmp	;tmp ne zero - don't delete mdl tags
+exp3:	lac	[dict.+1]
+	dac	start	;go thru rc to find which are 0
+	lac	defcnt	;see if defcnt is zero
+	asn		;
+	jmp	exp6	;thats alll
+	cia		;
+	dac	countr	;
+exp1:	hlt		;thisinstruction is replaced
+	and	@start	;see if rcis zero
+	isz	start	;
+	isz	start	;point start to next one
+	asn		;
+	jmp	exp2	;it is zero delete it
+exp7:	isz	countr	;anything left to search
+	jmp	exp1	;yes
+exp6:	jms	setcur	;set curdef
+	jms	crunch	;crunch core
+	lac	ddlp1	;reset available core
+	sub	top	;
+	dac	avcore	;
+	jmp	endmes	;
+exp2:	lwc	4	;have address point to the name
+	add	start	;
+	dac	address	;
+	lac	@address;test to see if it is a tag
+	and	f.tag	;because if it is we cannot delete
+	asz		;like a subroutine
+	jmp	exp4	;it is a tag
+	jms	delete	;
+	jmp	exp3	;restart expunge procedure
+exp4:	lac	tmp	;lets see if we remove mdl tags
+	asz		;skip if we do
+	jmp	exp7	;thats it do nothing with tags
+	isz	address	;is it a mdl tag?
+	isz	address	;
+	lac	@address;lets see
+	asz		;skip if mdl tag
+	jmp	exp7	;else continue
+	lwc	1	;decrement the definition count
+	add	defcnt	;
+	dac	defcnt	;
+	lac	address	;this is where to start
+	dac	star	;
+	sub	[3]	;this is wheere to end
+	dac	endd	;
+	isz	countr	;
+	skp		;
+	jmp	exp6	;
+	lac	countr	;
+	sal	1	;we want to move 3*countr
+	add	countr	;
+	dac	com3	;com3 is nowour countr
+	lac	@star	;start here 
+	dac	@endd	;end here
+	isz	com3	;
+	jmp	.-3	;
+	jmp	exp3	;re enter expunge without restartng
+Strange:isz	f.clear	;raise clear flag
+	jmp	endmes	;
+     		Subttl Graphics Procedures Level 0:
+TEXT:	jms	intty	;input count
+	and	[77]	;get right amount of bit
+	asn		;if zero then exit
+	jmp	endmes	;
+	cia		;complement
+	dac	countr	;save it in countr
+	lac	dend0	;dend0=djmp back
+	dac	dend	;exchange end statements
+	savec	line,y1	;push fast and clear
+	savec	column,y2	;
+	lac	[.jmp gdl]
+	dac	disp+1	;this is to re direct the output
+	lac	[dstb 0];
+	jms	.disp	;
+	lac	tss	;text scale size
+	sam	[dsts 1];see if same as vector scale
+	jms	.disp	;no - not same store instr,
+Text1:	jms	intty	;to the right displaylist
+	jms	outdsp	;
+	isz	countr	;store character and see if more to com
+	jmp	text1	;yes - more to come
+	lac	[.xam f.spd];restore previous conditions
+	dac	disp+1	;
+	save	y1,line
+	save	y2,column
+	lac	dend1	;restore normal display end
+	dac	dend	;
+	lac	[dstb 1]
+	jms	.disp	;
+	lac	[dsts 1];see if it needs to be reset
+	sam	tss	;
+	jms	.disp	;
+	jmp	endmes	;thats all
+Gdl:	jms	.disp	;
+	jmp	@disp	;
+     		Subttl Graphics Procedures Level 1:
+DEFPIC:	jms	@[gtword]	;input the nae
+	dac	param1	;save it
+	jms	intty	;get lock argument
+	rar	1	;save it in link
+	cla		;see if we have been here before
+	sam	param1	;cannot have subpicture name=0
+	sam	f.def	;if so this shouldn't be zero
+	jmp	endmes	;yup
+	iac		;insert a 1 while defining
+	lsz		;if l=0 then lock is not on
+	ior	f.lock	;
+	dac	rc	;
+	lac	param1	;pick up the name again
+	jms	search	;see if multiple definitions
+	skp		;no
+	jmp	endmes	;yes - exit on error
+	lwc	2	;no blinking vectors initially
+	add	top	;
+	dac	vecpnt	;init. vecnt address
+	iac		;vecpnt points to 1st storage place
+	dac	vecnt	;
+	law	1	;
+	dac	@vecnt	;we always assume 1 is there
+	jms	decav	;and account for it
+	lac	param1	;remember name
+	dac	defent	;for enddef
+	isz	f.def	;ok to raise flag now
+	lac	ddlp1	;
+	dac	defstr	;this is where the definition is to 
+	lac	dend	;start-1
+	jms	.disp	;hold MDL
+	lac	[lpof]	;unsensitise light pen
+	jms	.disp	;
+	stl		;we want an entry vector
+	jms	defref	;
+	lac	[4006]	;push the main display list line
+	xam	tss	;characteristics onto a stack
+	dac	mtss	;
+	cla		;also reset the current line
+	xam	blink	;characteristics
+	dac	mfblink	;
+	cla		;
+	xam	f.dot	;
+	dac	mf.dot	;
+	jmp	endmes	;
+ENDDEF:	cla		;remember extra enddefs are
+	sam	f.def	;ignored
+	skp		;
+	jmp	endmes	;like here for instance
+	lac	[dnop]	;insert for INSERT
+	jms	.disp	;
+	lac	[drjm]	;return
+	jms	.disp	;put it in,
+	lac	ddlp	;find the size of this mother
+	dac	com3	;load up for blt
+	sub	defstr	;
+	cia		;load up for countr
+	dac	countr	;( actually get ready for blt)
+	law	1	;find right distance
+	add	vecpnt	;
+	sub	ddlp	;find distance to move
+	dac	distance;
+	jms	blt	;do a block transfer here
+	lwc	1	;reset ddlp
+	add	defstr	;reset ddlp position
+	dac	ddlp	;
+	iac		;
+	dac	ddlp1	;
+	lac	defent	;
+	jms	refadd	;
+	jmp	@[error4]	;fatal error
+	dac	defent	;
+	lac	stops	;form a djmp here
+	xor	[70000]	;
+	dac	@defent	;
+	isz	addr	;zero right portion of rc
+	lac	f.lock	;
+	and	@addr	;
+	dac	@addr	;
+	jms	decav	;account for pointer space
+	lwc	2	;update pointers
+	add	stops	;
+	xor	@top	;carry along delete bit
+	dac	@top	;
+	and	[toc]	; remove delete bit !!!!!
+	dac	top	;
+	iac		;
+	dac	stops	;stops points to info word
+	cla		;clear pip - info word
+	dac	f.def	; now clear flag
+	dac	@stops	;
+	lac	vecpnt	;translate bvs
+	iac		;point to first real b v
+	dac	dtemp	;
+	lac	@vecnt	;get the count
+	cia		;
+	dac	xxxx	;and save it
+	jms	trans	;translate all tags
+	lac	mtss	;pop the original line characteristics
+	dac	tss	;off the stack
+	lac	mfblink	;
+	dac	blink	;
+	lac	mf.dot	;
+	dac	f.dot	;
+	cla		;end pdp
+	dac	@top	;
+	sam	f.clear	;do we have to clear the screen
+	jmp	NEWPIC	;yes
+	jmp	endmes	;
+     		Subttl Graphics Procedures Level 1:
+CALPIC:	jms	@[gettwo]	;input the tag and the name
+	lac	param1	;get the tag
+	asz		;is it present
+	jmp	clpc	;yes : we must define it
+Clpc1:	jms	calp	;
+	jmp	endmes	;
+Clpc:	cla		;special rc for defining
+	dac	RC	;
+	sam	f.def	;are we defning?
+	isz	RC	;yes
+	lac	f.tag	;tag on Tag status
+	ior	param1	;
+	dac	param1	;save it for defref
+	jms	search	;check for multiple definitions
+	skp		;ok go and define it
+	jmp	endmes	;multiple entries are not allowed
+	cll		;
+	jms	defref	;define reference
+	CAL		;NOW SEE IF FLOATING DEFINITION COUNT
+	SAM	F.DEF	;MUST BE INCREASED
+	ISZ	F.DEF	;YES IT MUST BE
+	jms	calp	;insert the call
+	lac	[dnop]	;
+	jms	.disp	;
+	jmp	endmes	;
+Calp:	0		;
+	lac	param2	;generate a call to 
+	jms	refadd	;the old subpicture
+	jmp	@calp	;return if nothing there
+	isz	addr	;increment rc
+	isz	@addr	;
+	xor	[40000]	;form a d jms
+	jms	.disp	;
+	jmp	endmes	;
+LINCHR:	jms	intty	;input characteristic
+	and	[3]	;we want only last two bits
+	add	[lcf]	;index into table
+	dac	com2	;save indexed address
+	lwc	4	;and off only last 2 bits
+	and	@com2	;
+	dac	com3	;and asve the result
+	jms	intty	;get the 2 bit value
+	and	[3]	;
+	ior	com3	;
+	dac	@com2	;store the result
+	jmp	endmes	;and exit
+     		Subttl Graphics Procedures Level 2:
+UNLOCK:	jms	@[gtword]	;pick up the name  of the subpicture
+	jms	refcnt	;pick up the reference count word
+	jmp	endmes	;nothing to pick up
+	and	[1777]	;
+	dac	@addr	;return count without lock bit
+	asn		;check for zero RC
+	jms	delete	;delete this subpicture
+	jmp	endmes	;thats all for here
+CALNEW:	jms	@[gettwo]	;pick up both parameters
+	jms	refadd	;see if new is defined
+	jmp	endmes	;do nothing - not even remove call
+	xor	[40000]	;yes it is - form a djms
+	dac	com3	;save the djms
+	lac	addr	;
+	iac		;get RC and
+	dac	com2	;
+	lac	param1	;
+	ior	f.tag	;or in tag status
+	jms	refadd	;see if it is defined
+	jmp	endmes	;because if it is then ignore everything
+	isz	@com2	;increment it
+	xam	com3	;pick up djms instruction
+	xam	@com3	;pick up instruction
+	sam	[dnop]	;and see if the old one was
+	jms	decrc	;decrement rc of what ever it was
+	jmp	endmes	;because if it is then decrement its
+     		Subttl Graphics Procedures Level 2:
+;	General utility subroutines for level 2 commands
+
+Dellink:0		;removes param1 from a list structure
+	lac	param1	;get the name
+	jms	getadd	;get the info addres
+	dac	com2	;save it
+	jms	findnop	;find address of trailing link
+	dac	com3	;save it
+	cla		;clear the previous link pointer
+	xam	@com2	;and get the previous name
+	dac	linkb	;this is the before link
+	dac	com2	;save it here too
+	asn		;skip if there is a previous link
+	jmp	nob	;no before link
+	jms	getadd	;get the info address of the p.l.
+	jms	findnop	;find the address which calls param1
+	dac	tmp1	;save this address
+	lac	@com3	;get what is pointing after param1
+	dac	@tmp1	;and update this here
+	isz	subcnt	;increment substitution count
+nob:	lac	[dnop]	;we have to clear whatever param1 is
+	xam	@com3	;calling
+	sam	[dnop]	;skip if there is an after link
+	skp		;there is something there
+	jmp	noa	;no after link
+	dac	vector	;save the djmp temporarily
+	xor	[70000]	;identify it
+	jms	i.d.	;
+	dac	linka	;this is the after link name
+	jms	getadd	;get its dnop address
+	xam	com2	;now fixup back pointers
+	dac	@com2	;
+	cla		;com2 was = (linkb)
+	sam	linkb	;do we decrement?
+	jmp	delrtn	;no
+	lac	vector	; yes
+	xor	[30000]	;
+	jms	decrc	;decrement it
+delrtn:	lac	[.entry-1];what kind of return do we have
+	sam	stack	;recursive or normal?
+	jmp	...d	;recursive
+	jmp	@dellink
+noa:	cla		;clear after link name
+	dac	linka	;
+	jmp	delrtn	;return
+xx:	0		;special subroutine for replac and subs
+	jms	@[gettwo]	;get both names
+	lac	param1	;get the first name (the one to remove)
+	jms	refadd	;see if it exists
+	jmp	endmes	;no - just exit
+	xor	[40000]	;make into djms param1
+	dac	com2	;this is what to search for
+	save	countr,y1;save for delete
+	save	address,y2;
+	lac	param2	;get substitutee
+	jms	refadd	;does it exist
+	jmp	endmes	;no exit quietly
+	xor	[40000]	;make into djms param2
+	dac	com3	;stare into what to replace with
+	jms	subs	;substitute them away
+	isz	addr	;addr points to rc now
+	lac	@addr	;get the reference count
+	add	subcnt	;increment reference count of param2
+	dac	@addr	;
+	lac	param1	;get the old name
+	jms	getadd	;get its info address
+	dac	y3	;save it ( this code is to fix up all
+	lac	param2	;links) d the same with the new name
+	jms	getadd	;
+	dac	y4	;
+	cla		;clear the old backpointer
+	xam	@y3	;get the old backpointer
+	asn		;skip if there is one
+	jmp	.xx	;else skip over this part
+	dac	@y4	;update backpointer
+	isz	addr	;have addr point to the RC
+	isz	@addr	;increment the rc of the new  one
+	jms	getadd	;
+	jms	findnop	;update the caller to the old to make it new
+	dac	tmp	;
+	lac	com3	;get the djms new
+	xor	[30000]	;
+	dac	@tmp	;
+.xx:	lac	y3	;
+	jms	findnop	;
+	xam	y4	;
+	jms	findnop	;fixup the after link
+	dac	y3	;
+	lac	[dnop]	;
+	xam	@y4	;
+	dac	@y3	;
+	jmp	@xx	;
+     		SUBTTL	Graphics Procedures Level 2:
+
+DELPIC:	jms	@[gtword]	;get the name of te deletee
+	dac	param1	;save it
+	jms	refadd	;see if it exist
+	jmp	endmes	;no just exit
+	xor	[40000]	;make into djms param1
+	dac	com2	;this is what to search for
+	save	countr,y1
+	save	address,y2
+	lac	[dnop]	;this is what to replace with
+	dac	com3	;
+	jms	subs	;substitute it away
+	jms	dellink	;delete all links to and from
+	save	y1,countr
+	save	y2,address
+	jms	delete	;
+	jmp	endmes	;thats it - it is gone for good
+REMPIC:	jms	@[gtword]	;get the arguement
+	dac	param1	;save the name
+	jms	intty	;get the link true/false argument
+	rar	1	;rotate result into link
+	lsn		;skip if normal
+	jmp	.rmp	;just remove link
+	lac	param1	;get the name
+	jms	refadd	;get the reference address
+	jmp	endmes	;error- just return
+	xor	[40000]	;make a djms to param1
+	dac	com2	;store in what to search for
+	lac	[dnop]	;
+	dac	com3	;save in what to replace with
+	jms	subs	;substitute all over the place
+	jmp	.+3	;skip over this part
+.rmp:	cla		;init substitution count
+	dac	subcnt	;clear substitution count
+	jms	dellink	;remove all linkages
+	jms	decrcm	;subtract (subcnt) amount of references
+	jmp	endmes	;return for next command
+REPLACE:jms	xx	;diddle everything
+	jms	decrcm	;remove all references (#'s that is)
+	jmp	endmes	;thats all folks
+SUBSTI:	jms	xx	;diddle around
+	save	y1,countr;replace all saved things
+	save	y2,address;
+	jms	delete	;delete the thing
+	lac	param2	;rename param2 to param1
+	jms	search	;
+	jmp	@[error4];
+	lac	param1	;
+	dac	@address;
+	jmp	endmes	;
+     	getadd:	0		;get the starting address
+	jms	refadd	;ac=name of starting address code
+	jmp	endmes	;default exit
+	dac	tmp	;save it temp.
+	lwc	1	;point to info word=pip
+	add	@tmp	;
+	xor	[70000]	;get actual address
+	jmp	@getadd	;return
+findnop:0		;
+	dac	star	;
+	lac	[drjm]	;find the insert word
+	sam	@star	;
+	jmp	.-1	;loop until you find it
+	lwc	1	;now get the actual address
+	add	star	;
+	jmp	@findnop;return
+;Rules:	1.  Relative pointer is occupied -dellink
+;	2.  Relative pointer is not occupied;
+;	    a)  corresponding insert is occupied - dellink
+INSERT:	jms	@[gettwo]	;get both arguments
+	jms	intty	;
+	rar	1	;shift result into link
+	law	endmes;
+	dac	after1-1	;
+	lsz		;skip on before
+	jmp	after	;
+	lac	param2	;see if relative pointer is occupied
+	jms	getadd	;
+	dac	y3	;
+	lac	@y3	;
+	asz		;skip on no occupancy
+	jmp	.set11	;
+	lac	param1	;see if corresponding pointer is
+	jms	getadd	;occupied
+	jms	findnop	;
+	dac	com2	;
+	lac	@com2	;
+	sam	[dnop]	;
+.set11:	jms	dellink	;
+	lac	@y3	;get backpointer
+	asn		;skip if there is a bp
+	jmp	.+3	;
+	dac	param2	;following the rules below
+	jmp	after1	;
+	lac	param2	;switch param1,param2
+	xam	param1	;
+	dac	param2	;
+	jmp	after1	;
+;rules-	if bp =0 then switch p1 and p2
+;	if bp .ne. 0 then treat as p1,backpointer
+After:	lac	param2	;get relative name
+	jms	getadd	;
+	jms	findnop	;see if relative pointer is occupied
+	dac	com3	;
+	lac	@com3	;
+	sam	[dnop]	;skip if there is not one
+	jmp	.set21	;
+	lac	param1	;get the corresponding conditions
+	jms	getadd	;
+	dac	com3	;
+	lac	@com3	;get the back pointer
+	asz		;skip on no backpointer
+.set21:	jms	dellink	;
+	skp		;
+	0		;return address
+after1:	lac	param1	;
+	jms	getadd	;
+	dac	y1	;y1 - info(i)
+	lac	tmp	;tmp (from getadd)=entry address of 1
+	xor	[70000]	;form djmp param1
+	dac	com2	;
+	law	1	;
+	add	addr	;from setup, addr - entry of param1
+	dac	y2	;y2- rc of param1
+	lac	param2	;get relative
+	dac	@y1	;initialize backpointer
+	jms	getadd	;
+	jms	findnop	;find the end of param2
+	xam	com2	;save address and get djmp param1
+	xam	@com2	;exchange with old pointer in ac
+	isz	@y2	;increment rc of param1
+	sam	[dnop]	;was there a pointer
+	skp		;guess so
+	jmp	@after1-1;
+	xam	y1	;get info(i)
+	jms	findnop	;find the end of the code
+	xam	y1	;store the end address 
+	dac	@y1	;fix up all links
+	xam	param1	;put into format for ..nam
+	dac	param2	;which can be found in nampic
+	lac	param1	;
+	jmp	..nam	;
+     		Subttl Graphics Procedures Level 2.
+
+REMCAL:	jms	@[gtword]	;get tag
+	ior	f.tag	;or in tag status
+	jms	refadd	;
+	jmp	endmes	;if not defined then leave
+	lac	@addr	;
+	dac	addr	;
+	lac	[dnop]	;guess so
+	xam	@addr	;
+	sam	[dnop]	;
+	jms	decrc	;decrement its rc if djms
+	jmp	endmes	;thats it
+SENSE:	jms	@[gtword]	;sensitize/unsensitize light pen
+	dac	param1	;imput name
+	jms	intty	;get sensitizing argument
+	rar	1	;
+	lac	[lpof]	;assumeit is sensitive
+	lsz		;
+	iac		;guess it isn't
+	xam	param1	;save it and pick up the mane
+	jms	refadd	;see if it is defined
+	jmp	endmes	;no - just exit
+	dac	com3	;save the entry table address
+	lac	@com3	;pick up the djmp
+	xor	[70000]	;
+	xam	param1	;param1=actuall call address
+	dac	@param1	;insert the vital instruction
+	jmp	endmes	;
+NAMPIC:	jms	@[gettwo]	;rename picture
+	jms	search	;see if new is really new
+	skp		;guess so
+	jmp	endmes	;that's all
+	law	endmes	;
+	dac	after1-1;
+.nampic:lac	param1	;pick up old na,e
+	jms	getadd	;get its starting address
+	jms	findnop	;get the end
+	dac	tmp	;save the dnop address
+	lac	param2	;ok to rename it
+	dac	@address;
+	lac	@tmp	;see if anything is there
+	sam	[dnop]	;
+	skp		;
+	jmp	@after1-1;	;thats all folks
+..nam:	xor	[70000]	;get entry address
+	jms	i.d.	;identify it
+	jms	getadd	;get its address
+	dac	tmp	;
+	lac	param2	;
+	dac	@tmp	;
+	jmp	@after1-1;
+	
+     		SUBTTL	variables
+
+FLAGS:
+F.STOP:	0		; input should be stopped.
+F.STPD:	0		; input is stopped.
+F.SPD:	0		; suppress text display
+F.REPT:	0		; repeat character
+F.35:	0		; ksr-35 mode
+F.OACT:	0		; output active
+F.REFR:	0		; refresh needed 
+F.KBDI:	0		; keyboard input
+F.TTYI:	0		; number of characters in input buffer
+F.FORC:	0		; force character typed.
+timeup:	0		;this bit is set when time to blink cursor
+USRAC:	BLOCK	2
+Gflags:
+f.lpout:0		;1 if sending lphit info, 0 if not
+name:	0		;offset to search routine see cc16.
+f.def:	0		;1 if defining subpict. 0 if not
+f.del:	0		;0 if nothing deleted,/=0 if otherwise
+f.wait:	0		;wait until display is done
+F.BLNK:	0		;=0 if no blinking vectors exist
+f.dwdo:	0		;display wait define (subpictures)only
+f.clear:0		;clear the screen of displays
+f.mdlb:	0		;#of main display list blinking vect.
+f.vmode:0		;the type of vector - on , off etc.
+defcnt:	0		;# of entries in dictionary
+subcnt:	0		;substitution count
+vecnt:	0		;address of vector count
+vecpnt:	0		;address where to insert next blinking vct.
+lcf:	y4:	0		;intensity (not implemented)
+f.dot:	0		;vectors are dotted if .ne.0
+blink:	0		;.ne. 0 if following vect. gen, are b.v.
+NFLAGS==.-FLAGS
+GNFLAG==.-GFLAGS
+tss:	dsts	2	;set text scale size
+F.MODE:	20		;15 BIT SET IF LOCAL MODE
+			;14 BIT SET IF GRAPHICS OUTPUT MODE
+f.visible:	120000	;visible  vector
+f.invis:	100000	;invisible vector
+f.dotted:	140000	;dotted vector
+f.tag:		 20000	;tag name status
+f.bsync:	and	@dtemp		;
+f.mask:		20000	;mask to sync b v.
+f.ssub:		0	;special substitution (will be changed)
+f.lock:	2000		;definition lock bit
+f.delb==f.invis
+initcurs:154735		;initialize cursor
+
+.ARMWD:	0		; for arming interrupts
+TUBP:	0		; points to where to find tty input char
+tsbp:	0
+KCHAR:	0		; keyboard character
+ICHAR:	0		; tty input character
+OCHAR:	0		; output character
+svtrak:	DJMS	track	; used for tracking box
+WCURS:	DJMS CURSOR	; cursor call
+TAB:	100000+DJMS CH11+10	; for tab routine
+LENGTH:	1000/WIDTH	; length of a line in characters
+LINES:	1000/HEIGHT	; number of lines per screen
+COLUMN:	0		; column position (COLUMN<LENGTH)
+LINE:	0		; line position (LINE<LINES)
+CURINC:	10		; cursor increment
+DLP:	0		; last display instruction address
+DLP1:	0		; c(DLP1) = c(DLP) + 1
+lstsiz:	0		;amount of available space left
+DTEMP:	0		; a display temp
+MODE:	outchar		; routine to accept kbd input
+COREND:	0		; last core location
+XCUR:	1000		; x current position
+YCUR:	1000
+TIME:	%N-1		; for timing blinks
+DLEND:	DJMP	DBLINK	; last instr in disp list
+
+DLOC:	0	;
+DCNT:	0	;	
+tbend:	0		;current text buffer end
+
+y1:	0		;temporary storage
+y2:	0		;
+n=setcur
+m=delete
+y3:	0		;
+mblink:	0		;were to insert next mdl b.v.
+stops:	0		;
+com2:	0		;
+com3:	0		;
+cpdp:	0		;current definition pointer
+npdp:	0		;pdp previous to cpdp
+top:	0		;points to 1st word used in definitions
+distance:0		;distance a display inst. is moved
+entrie:	0		;temporary storage
+countr:	0		;used in block transfers as a counter
+addr:	0		;normally points to entry addr. or RC
+address:0		;normally points to name (both in dict.)
+param1:	0		;holds first input word past message
+param2:	0		;header, this holds the second
+linka:	0		;link after - set by dellink
+linkb:	0		;link before - set by dellink
+avcore:	0		;available core left in upper 4k
+ddlp:	0		;insert display instructions in upper
+ddlp1:	0		;4k
+stack:	0		;stack pointer
+dend:	djmp	<mdls-11>&7777	;this ends the upper 4k display list
+dend0:	djmp	back	;
+dend1:	djmp	<mdls-11>&7777	;ends 4k display list
+defstr:	0		;defin. this is where it is init. assem.
+defent:	0		;this is the name of the definition being
+;assembled
+proc:	0		;jump indirect to here for right proc.
+RC:	0		;definition reference count
+TMP:	0
+TMP1:	0
+MSGOCNT:0		;
+mf.dot:0		;one level push down stack for
+mfblink:0		;linchr
+mtss:	0		;
+xxxx:	0		; used for temporary storage
+     		SUBTTL	literals
+
+	LIT
+     		SUBTTL	start of the display list
+
+	ORG	4000		;i don't care if there is an overlap
+
+DBLINK:	DJMS	CURSOR
+back:	dnop			;do tracking box
+cent:	DJMS	CENTER
+	dhlt+14		;halt- lightpen enable off
+DSTART:	DSTS+1
+	DJMS	CENTER
+	dstb	1		;goto upper 4k
+GRAFIC:	DNOP			; graphics portion
+	dstb	0		;assume rest in lower 4k
+MAINDL:	DSTS	2		; scale of characters is 2
+	DLXA	0
+TOPL:	DLYA	2000-2*HEIGHT
+	DJMS	DPAUSE
+	LPOF			;light pen off
+JMPBRK:	DJMP	BREAK
+auto:	LPVECT			;this is an auto increment register
+lphitc:	-8			;holds count of hits -8
+lpvect:	.			;this is our lpen hit buffer
+	block	20		;area
+lpsign:	dsts	2		;set to text scale
+	dlxa	2000-2*width	; this is the light pen hit
+	dlya	2000-2*height	; sign - it goes on whenever
+	djms	dpause		; a hit occurs and goes off when
+	djms	ch43		; display #
+CENTER:	DLXA	1000
+	DLYA	1000
+	DJMP	DPAUSE
+CURSOR:	ince	0-2
+MULCRS:	inc	b31 3-1 q
+ULCURS:	inc	b31 3-1		; upper case cursor
+	inc	b3-1 31		; lower case cursor
+
+	TRBLEN==54
+track:	lpof		;turn light pen off
+BOXX:	DLXA	1000
+BOXY:	DLYA	1000
+	DJMS	DPAUSE
+LPTRBX:	4025		;DRAW DOT AND SET SCALE 1
+	DLNV
+	TRBLEN/2
+	TRBLEN/2
+
+;	lpon		;turn the light pen on
+SIDES:	DJMS	SIDE0
+	DJMS	SIDE1
+	DJMS	SIDE2
+	DJMS	SIDE3
+	DRJM		; RETURN TO MAIN FLOW = D. RISEN
+SIDE0:	LPON
+	LNV	0,-TRBLEN,20000
+	DRJM
+SIDE1:	LPON
+	LNV	-TRBLEN,0,20000
+	DRJM
+SIDE2:	LPON
+	LNV	0,TRBLEN,20000
+	DRJM
+SIDE3:	LPON
+	LNV	TRBLEN,0,20000
+	DRJM
+	SUBTTL	tables
+
+
+
+SPCTAB:	EXP	SPC10,SPC11,SPC12,SPC13,SPC14,SPC15
+
+CURTAB:	EXP	XCUR,I!YCUR,I!XCUR,YCUR
+
+MAGIC:	EXP	40,0,20,0,140,140,60,20
+	dstb	0	;this gets moved abouve the
+	djmp	maindl	;
+	30200		;entry table
+	repeat 5,<100200>
+	100140		;
+dsload:
+     		Subttl Graphics Procedure Entry Table
+Gproc:	RESET		;reset to normal tty mode
+	endmes		;no correspondance
+	DCLEAR		;clear the screen of text ( same as ^b )
+	LOADER		;start up loader - 3
+	endmes		;
+	endmes		;5
+	endmes		;6
+	endmes		;7
+;Initialization commands and I/O formatters
+	INITDSL		;initialize to graphics mode
+	.ENTER		;ENTER INTO DSL INPUT MODE
+	EXIT		;exit from dsl input mode
+	EXPUNGE		;clean up dictionary and core
+;Level 0 procedures
+	NEWPIC		;clear screen and center beam
+	DRAW		;draw a vector
+	MOVE.		;position beam
+	DOT		;display a dot
+	TEXT		;display text
+	ENDPIC		;end definition of Main Display List
+;Level 1 Procedures
+	DEFPIC		;define subpicture
+	ENDDEF		;end definition of subpicture
+	CALPIC		;generate a call on a subpicture
+	SENSE		;sensitize subpicture to light pen
+	LINCHR		;set line (vector) characteristics
+	DEVOPR		;move cursors
+;Level 2 Procedures
+	INSERT		;inserting a subpicture
+	REMPIC		;remove subpicture from display list
+	REPLACE		;replace subpicture with another
+	SUBSTI		;substitute subpicture with another
+	REMCAL		;remove object of call with dnop
+	CALNEW		;replace the object of a call
+	UNLOCK		;unlock a subpicture
+	DELPIC		;delete a picture
+	NAMPIC		;rename a subpicture
+;that is all of the support the IMLAC can give
+Procend:
+     	tibuf:	bss	tibl	;input buffer
+tibe=.-1
+tobuf:	bss	tobl
+tobe=.-1
+;
+;  QLC - quick look and change.
+;
+;  Idea borrowed from BBN's "TSIM",  added to pdsmon by tlb.
+;
+;
+
+	ifndef debug,<debug==1>
+
+	ifn debug,<
+
+OUTQLC:	BSS	1			; called from OUTLUP.
+	SUB	["8"]			; get char-"8"
+	ASM				; skip if char .lt. 8
+	JMP	QLCERR			; no. error.
+	ADD	["8"-"0"]		; get char-"0"
+	ASM				; skip if char .lt. 0
+	JMP	QLCNUM			; no. accumulate octal number.
+	ADD	["0"-"*"]		; get char-"*"
+	ASM				; skip if char .lt. *
+	JMP	QLCGO			; no. go dispatch on command.
+QLCERR:	LAW	17			; command error. get bell.
+QLCCOR:	JMS	@[OUTDSP]			; display character.
+	CAL				; clear ac.
+	DAC	QLCACC			; clear octal number.
+	I JMP	OUTQLC			; return.
+
+QLCGO:	ADD	[QLCTAB]		; get address of dispatch table.
+	DAC	QLCTMP			; save dispatch address.
+	LAC	@[KCHAR]			; get character,
+	JMS	@[OUTDSP]			; and echo it.
+	LAC	QLCACC			; have arg in ac,
+	I JMP	QLCTMP			; and dispatch.
+
+QLCTAB:	I JMP	QLCACC			; n* - jump to address.
+	JMP	QLCFOR			; +  - type .+1
+	JMP	QLCTYD			; ,  - type .
+	JMP	QLCBAK			; -  - type .-1
+	JMP	QLCDEP			; n. - deposit, type .+1
+	;				; n/ - type n.
+
+QLCTYP:	DAC	QLCDOT			; set .
+QLCTY1:	I LAC	QLCDOT			; get contents of .
+	JMS	QLCOCT			; type octal number.
+	LAW	40			; get space.
+	JMP	QLCCOR			; type space, return.
+
+QLCDEP:	I DAC	QLCDOT			; deposit.
+QLCFOR:	LAW	1			; get +1.
+	SKP				; fall into routine.
+QLCBAK:	LWC	1			; get -1.
+	ADD	QLCDOT			; add to .
+	DAC	QLCDOT			; update .
+QLCTYD:	LAW	15			; get return.
+	JMS	@[OUTDSP]			; output return.
+	LAW	12			; get line feed.
+	JMS	@[OUTDSP]			; output line feed.
+	JMS	@[DISP]			; type it.
+	LAC	QLCDOT			; get .
+	JMS	QLCOCT			; type address.
+	LAW	"/"			; get slash
+	JMS	@[OUTDSP]			; type it.
+	JMP	QLCTY1			; go type contents.
+
+QLCNUM:	XAM	QLCACC			; digit seen.
+	RAL	3			; shift.
+	AND	[177770]		; clear garbage.
+	IOR	QLCACC			; or in digit.
+	XAM	QLCACC			; put it back.
+	ADD	["0"]			; make it ascii.
+	JMS	@[OUTDSP]			; echo digit.
+	I JMP	OUTQLC			; return.
+
+QLCOCT:	BSS	1			; output octal number.
+	DAC	QLCTMP			; save  the number.
+	LWC	6			; 6 digits.
+	DAC	QLCTM2			; save in temp.
+	LAC	QLCTMP			; get number.
+	RAL	1			; special fudge for 1st bit.
+	DAC	QLCTMP			; save shifted number.
+	CLA				; clear ac.
+	RAL	1			; shift high order bit.
+QLCOC1:	ADD	["0"]			; make a digit.
+	JMS	@[OUTDSP]			; type it.
+	LAC	QLCTMP			; get word.
+	RAL	3			; next digit.
+	DAC	QLCTMP			; re-save it.
+	RAL	1			; account for link.
+	AND	[7]			; 1 digit only.
+	ISZ	QLCTM2			; done yet?
+	JMP	QLCOC1			; no.  go type this one.
+	I JMP	QLCOCT			; yes.  return.
+
+	> ; end ifn debug.
+
+	Ife debug,<  outqlc=OUTDSP  >
+	IFN DEBUG,<
+QLCDOT:	0		; . for qlc.
+QLCACC:	0		; build number in qlc.
+QLCTMP:	0		; temporary for qlc.
+QLCTM2:	0		; another one.
+	>
+     		subttl Graphics Output Procedures
+
+Dslout:	0		;type header bytes to output
+	dac	temp	;save temporarily
+	law	34	;this is the message header
+	jms	@[outchar]
+	law	7	;send it away
+	and	temp	;get bottom three bits
+	ior	[100]	;
+	jms	@[outchar]
+	lac	temp	;get the other one
+	sar	3	;
+	jms	@[outchar]
+	jmp	@dslout	;return
+TEXTIN:	0		;graphics text input
+	dac	temp1	;save the character
+	law	1011	;send message header
+	jms	dslout	;
+	law	101
+	jms	@[outchar]
+	law	37	;see if control character
+	sub	temp1	;
+	asp		;skip true (cc)
+	jmp	tok	;ok character
+	law	16	;special format for control characters
+	jms	@[outchar]
+	law	100	;make into good character
+	ior	temp1	;
+	asn		;skip always
+tok:	lac	temp1	;just send this character
+	jms	@[outchar]
+	jmp	@textin	;
+error1:	law	1013	;graphics incapability
+	jmp	errin	;
+error2:	law	1023	;no more core left
+	jmp	errin	;
+error3:	law	1033	;dictionary full
+	asn		;skip always
+error4:	law	1043	;internal error - fatal most likely
+ERRIN:	jms	dslout	;send graphics header
+	jms	@[setcur]; this is a bug fix***
+	lac	@[proc]	;get offending reutine call
+	sub	[gproc]	;get its index
+	ior	[100]	;ior 100 make into good character
+	jms	@[outchar]
+	jmp	@[endmes];so much for that
+dslform:0		;take a word and output it in dsl
+	dac	temp	;format
+	sar	3	;get high order
+	sar	3	;bits now
+	and	[77]	;
+	ior	[100]	;
+	jms	@[outchar]
+	lac	temp	;
+	and	[77]	;
+	ior	[100]	;
+	jms	@[outchar]
+	jmp	@dslform;return
+temp:	0		;some temporary storage
+temp1:	0		;same thing here
+     	DEVOPR:	jms	@[intty];get device
+	dac	temp	;save it temporarily
+	jms	gettwo	;get both x and y
+	jms	@[intty];get index
+	and	[3]	;make sure it is within the limits
+	add	[index]	;get the right address
+	xam	temp	;
+	sam	[9]	;
+	jmp	@[endmes];not position cursor do nothing
+	lac	@temp	;get reall address
+	dac	temp	;
+	jmp	@temp	;
+pcrel:	lac	@[param1];get x
+	add	boxx	;add on position
+	dac	@[param1];
+	lac	boxy	;get boxy
+	add	@[param2];relative to boxy
+	skp		;
+pcabs:	lac	@[param2];ready for curupd
+	dac	@[ycur]	;
+	lac	@[param1];
+	dac	@[xcur]	;
+	jms	curupd	;update and exit
+	jmp	@[endmes];thats it
+pcon:	lac	[dnop]	;see if it is on
+	skp
+pcoff:	lac	[.djms track];see if it is off
+	sam	@[back]	;
+	jmp	@[endmes];
+	xam	@[svtrak];get the complement of it
+	dac	@[back]	;and update current status
+	jmp	@[endmes];
+Gtword:	0		;input a word
+	jms	@[intty];
+	and	[77]	;he is sending 8 bit bytes of
+	sal	3	;6 bits significance
+	sal	3	;rshift into right place
+	dac	temp	;save it
+	jms	@[intty];pick up least significant half
+	and	[77]	;truncate to 6 bits
+	ior	temp	;or in top part
+	jmp	@gtword	;return with input in ac
+Gettwo:	0		;input two arguments into param1,2
+	jms	gtword	;input a word
+	dac	@[param1];this is param 1
+	jms	gtword	;input the other word
+	dac	@[param2];this is param 2
+	jmp	@gettwo	;
+CURUPD:	0		;update cursor position
+	LAC	@[XCUR]	;
+	and	[1777]	;
+	IOR	[DLXA.]	;
+	DAC	BOXX	;
+	LAC	@[YCUR]	;
+	AND	[1777]	;
+	IOR	[DLYA.]	;
+	DAC	BOXY	;
+	JMP	@CURUPD	;
+     		Subttl patch routines
+
+fudge:	lac	@[kchar]	;fudge 173-176 characters thru
+	xor	[1500]		;see if this character is it
+	sub	[5]		; if so it (ac) is minus
+	asm			;lets see
+	jmp	@[ckmode+1]	;guess not
+	add	[177]		;get the actual character
+	jmp	@[endk]		;thats all
+     		Subttl	IGM lightpen processing routines
+
+
+Lphit:	sam	lphitc		;ac=0 -this is the interrupt
+	jmp	.+3		;routine
+	lprc			;just read it
+	jmp	@[dismis]	;and forget it - buffer full
+	lprc			;read address+1
+	dac	hitadd		;save it temporarily
+	sub	[sides+1]	;see if tracking box was hit
+	asp			;ac=offset index
+	jmp	stackp		;guess not
+	sub	[4]		;see if within range
+	asm			;
+	jmp	stackp		;it was something else
+	add	[curtab+4]	;get magic index
+	dac	hitadd		;
+	lac	@hitadd		;here
+	DAC	HITADD		;
+	asp			;get increment
+	lwc	20		;
+	asm			;
+	law	20		;
+	add	@hitadd		;
+	dac	@hitadd		;
+	jms	curupd		;update cursor positin
+	jmp	@[dismis]	;return from interrupt
+hitadd:	0			;
+stackp:	lac	hitadd		;get address back
+	dac	@auto		;put into our  history buffer
+	isz	lphitc		;increment the hit count
+	jmp	@[dismis]	;dismis on all accounts
+	jmp	@[dismis]	;
+     		Subttl	IGM lightpen hit routines - cc16
+
+comment*
+we cannot allow graphics routines to be going simultaneously 
+with cc16 (send lightpen hit information) since both routines
+call SEARCH.  thus, exchanging hit addresses in table with
+associated tag names, and freeing search routine simulates
+a primitive call on search*
+
+cc16:	isz	@[f.lpout]	;set output flag
+	isz	@[name]		;set name to 1 to have search
+	lwc	8		;search for addresses
+	dac	temp1		;process at most 8 addresses
+	lac	lpvect		;get address of old buffer
+	xor	[10]		;
+	dac	temp3		;save it here
+	dac	temp2		;and here
+cc16l:	isz	temp2		;look at next buffer entry
+	lac	@temp2		;get fudged address
+	asn			;at end of buffer?
+	jmp	cc16d		;yes
+	add	[-1]		;get real address
+	jms	@[.search]	;search for tag name
+	jmp	cc16n		;no good no tag here
+	sub	[1]		;address of address returned
+	dac	dslout		;dslout used temporarily
+	lac	@dslout		;get the tag name
+cc16h:	dac	@temp2		;put name into buffer
+	isz	temp1		;are we done yet
+	jmp	cc16l		;no
+	cla			;yes
+cc16d:	dac	@[name]		;free up search routine here
+	law	101		;set first of string
+	dac	temp2		;
+	lwc	10		;process all 8 of these
+	dac	temp1		;
+loopcc:	isz	temp3		;get next buffer entry
+	lac	@temp3		;get name
+	asn			;zero name is dummy
+	jmp	loopcn		;no hit
+	law	1054		;hit is good and identified
+	jms	dslout		;
+	lac	@temp3		;get name again
+	jms	dslform		;send it
+	law	101		;send first argument
+	sam	temp2		;
+	law	100		;not first
+	isz	temp2		;
+	jms	@[outchar]	;send final character
+loopcn:	isz	temp1		;any more?
+	jmp	loopcc		;more to process
+	cla			;
+	dac	@[f.lpout]	;clear everything
+	jmp	@[ccretn]	;good bye
+temp3:	0
+temp2:	0
+cc16n:	cla			;
+	jmp	cc16h		;
+     		Subttl	IGM new history routine for light pen hits
+
+
+newhst:	0			;reset for new lpen history
+	lac	dstart+1	;get djms center
+	dac	cent		;
+	lac	lpvect		;see if ay hits were recorded
+	sub	auto		;auto gt lpvect if there were
+	asm			;hits
+	jmp	@newhst		;no hits
+	lac	[.djms + lpsign]; turn on sign
+	dac	cent		;
+	cla			;dont update history if no hits
+	sam	lphitc		;buffer full?
+	jmp	hst1		;fill up buffer
+hst2:	lwc	8		;room for 8 hits at most
+	xam	lphitc		;
+	xam	lpvect		;
+	xor	[10]		;
+	dac	auto		;update to new buffer
+	xam	lpvect		;
+	jmp	@newhst		;
+hst1:	dac	@auto		;fill restof buffer with
+	isz	lphitc		;zzeros
+	jmp	hst1		;
+	jmp	hst2		;
+     		SUBTTL	character and control tables
+
+	LIT
+
+DEFINE .TBL (A)<
+	IF1,<Z>
+	IF2,<	IFDEF  CH'A,<	150000+CH'A >
+		IFNDEF CH'A,<	Z >>>
+
+CHTAB:	CH==0			; assemble character table......
+	REPEAT 200,<
+	.TBL (\CH)
+	CH==CH+1>
+	list
+
+DEFINE .TBL (A)<
+	IF1,<Z>
+	IF2,<	IFDEF	CC'A,<CC'A>
+		IFNDEF	CC'A,<Z>>>
+
+CONTRO:	CC==0			; assemble control table......
+	REPEAT	40,<
+	.TBL (\CC)
+	CC==CC+1>
+	list
+     		SUBTTL	Character definitions
+
+Printx	Starting character table!
+
+	DEFINE	CSET(START,LIST)	<%==START
+		IRP(LIST),<CHDEF(\%,LIST)
+		%==%+1 > >
+	DEFINE	CHDEF(A,B) <CH'A:! BLOCK B >	; suppress to ddt
+
+
+ECUR:!	DLXA	2000-20
+	DLYA	5
+	DJMS	DPAUSE
+	ince	02 B01 11 10 2-2 1-1 10 11 01 -11 -10 -2-2 -1-1 -10 -11 Q
+CH11:!	REPEAT	7,<DJMS CH40>
+	DJMP	CH40
+CH13:!	REPEAT	3,<DJMS CH12>
+	DJMP	CH12
+CRLF:	DJMS	CH15
+	DJMP	CH12
+	CSET	1,<5,7,10,3,4,6,5,3>
+CH12:!	BLOCK	3
+CH15:!	DLXA	0
+DPAUSE:	CHDEF	0,7
+	CSET	16,<10,10,5,6,5,6,7,6,5>
+	Djmp	ch157
+	CSET	27,<6,4,5,5,3>
+	Djmp	ch75
+	CSET	34,<7,6,7,3,3,4,4,10,11,10,7,3,5,5,10,5,4,3,3,3,7,4,6,7>
+	CSET	64,<5,5,7,5,7,6,4,5,4,6,4,7,11,6,10,6,6,7,6,7,6,6,6,5,5>
+	CSET	115,<5,5,7,6,7,6,6,6,6,5,6,5,5,6,6,4,6,5,5,4,6,6,5,6,7>
+	CSET	146,<6,7,5,5,6,6,4,7,5,6,7,7,4,6,5,6,5,6,5,6,6,6,5,6,5>
+ECHSET:
+
+Printx	End of character table!
+     	BREAK:			; program break
+
+	END	RESET
