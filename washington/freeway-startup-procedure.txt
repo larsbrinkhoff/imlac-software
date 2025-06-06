@@ -1,0 +1,26 @@
+STARTUP SEQUENCE
+
+INPUT WORD 1: SET HUMAN CONTROLS
+    if it's a positive number, use default behavior (player chooses their speed before every "shot")
+    If it's a negative number, the last 4 bits = Player's permanent velocity
+
+INPUT WORD 2: SCORING
+    If data switches are positive, use default behavior (play without scoring) skip straight straight to WORD 4.
+    If data switches are negative, the bits are interpreted as two variables, "K1" and "K2".
+        Data switches _111111111222222
+        K1 = 9 bits, K2 = 6 bits
+        These control how quickly the score counts down from it's initial value
+        It's unlear to me at this point how K1 and K2 were meant be be used
+        together or alternatively (as, say, two different scoring modes)
+
+INPUT WORD 3: SET MAX SCORE
+    Data switches ___________XXXXX
+    Interpreted as MAXSCORE in 1000s. 
+    While playing, the score counts down from this value. The faster you "fire", the higher your score. 
+    Maximum value is 31 (i.e. the score counts down from a starting point of 31,000)
+
+INPUT WORDS 4-9: SET CAR VELOCITIES
+    Each word sets the velocity on one of the six computer-controlled cars
+    On each pass, the car will rendomly choose a velocity between Vmax and Vmax/2
+    The sign determines whether the car travels left or right
+    For a quick-start run, the default speeds in octal are 000040 for 3 cars (going right) and 177740 for 3 cars (going left)
