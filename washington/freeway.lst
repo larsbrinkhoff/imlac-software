@@ -1603,3 +1603,143 @@ LITERALS
  2710      000550
  2711      051645
  2712      010000
+
+PAGE    34                   FREEWAY CROSSING PROGRAM              
+
+
+SAVES
+
+  2713     SETFIRE
+  2714     SCOREINC
+  2715     CARTAB
+  2716     RVEL
+  2717     VEL
+  2720     POSIT
+  2721     CTR
+  2722     TMP
+  2723     SUBPOS
+  2724     SUBVEL
+  2725     SCOREON
+  2726     K1
+  2727     SCORE
+  2730     PERMSET
+  2731     VADP
+  2732     SCOREMAX
+  2733     K2
+  2734     OTA
+  2735     OTC
+  2736     TIME
+  2737     BLANK
+  2740     NUM1
+  2741     CRASH
+  2742     Y
+  2743     YDIR
+  2744     OTD
+  2745     OTB
+
+PAGE    35                   FREEWAY CROSSING PROGRAM              
+
+
+SYMBOLS
+
+   B          003027
+   B3         001562
+   CAR        001511
+   CARTAB     000272
+   CAR0       002610
+   CAR1       002617
+   CAR2       002623
+   CAR3       002627
+   CAR4       002633
+   CAR5       002637
+   CAR6       002643
+   CONVERT    000222
+   CRASH      001003
+   CRASHED    001052
+   CRASHED1   001064
+   CRASHLP    001016
+   CRASHOUT   001042
+   CRUNCH     001645
+   CRUNCH0    002652
+   D          001214
+   DIGIT      002616
+   DIS        002142
+   END        000773
+   EXEC       001420
+   FIRE       002563
+   INCAR      000475
+   INLOOP     000527
+   INPOS      000555
+   INPUT      000413
+   INSCORE    000435
+   INSERT     000657
+   INSERT1    000672
+   KEYS       000312
+   K1         000400
+   K2         000352
+   K3         000347
+   L          002656
+   LETTER     002006
+   LLD2       001446
+   LLD4       001476
+   LOOP1      000102
+   LOOP2      000120
+   LPP        003005
+   LRD1       001435
+   LRD3       001460
+   LR5        001503
+
+PAGE    36                   FREEWAY CROSSING PROGRAM              
+
+   M          001130
+   NEG        000201
+   NR         001112
+   NUM1       002533
+   ODIV       001330
+   OUTPUT     001315
+   OUT1       001355
+   PLUS       000207
+   POS        000126
+   POSIT      000264
+   POSLP      000141
+   POSZERO    000156
+   RAND       001076
+   RD         001127
+   REST       002127
+   RRRR       000214
+   RVEL       000250
+   SCORE      002514
+   SCOREMOD   000606
+   SDIV       000634
+   SET        002541
+   START      000731
+   START1     000703
+   START2     000762
+   START3     000721
+   START4     000710
+   SUBJECT    000237
+   TAB        000301
+   TAB1       000300
+   UP         001554
+   VEL        000256
+   WRITE      001371
+
+PAGE    37                   FREEWAY CROSSING PROGRAM              
+
+
+
+ORIGIN             100
+
+ENTRY POINT         70
+
+LITERAL START     2656
+
+SAVE START        2713
+
+FIRST FREE WORD   2746
+
+
+   0  ERRORS
+*STOP* 0
+!FIN
+!!BEGIN IDLE
