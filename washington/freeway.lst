@@ -147,7 +147,7 @@ PAGE    3                    FREEWAY CROSSING PROGRAM
   312                 139 KEYS BSS 1  /KEYBOARD READ ROUTINE
   313      002020     140  KSF      /SKIP ON KEYBOARD FLAG
   314      110312     141  I JMP KEYS /OTHERWISE RETURN
-
+
 PAGE    4                    FREEWAY CROSSING PROGRAM
 
   315      100001     142  CLA
@@ -197,7 +197,7 @@ PAGE    4                    FREEWAY CROSSING PROGRAM
   371      022724     186  DAC #SUBVEL /DECREMENT VELOCITY
   372      062731     187  LAC #VADR
   373      072670     188  SUB =1
-
+
 PAGE    5                    FREEWAY CROSSING PROGRAM
 
   374      022731     189  DAC #VADR  /DECREMENT TABLE
@@ -247,7 +247,7 @@ PAGE    5                    FREEWAY CROSSING PROGRAM
   450      003063     233  SAR 3
   451      003063     234  SAR 3
   452      022726     235  DAC #K1
-
+
 PAGE    6                    FREEWAY CROSSING PROGRAM
 
   453      000000     236  HLT
@@ -297,7 +297,7 @@ PAGE    6                    FREEWAY CROSSING PROGRAM
   527      100041     280 INLOOP LDA  /READ DATA SWITCHES
   530      102001     281  ASN
   531      010534     282  JMP .+3
-
+
 PAGE    7                    FREEWAY CROSSING PROGRAM
 
   532      062700     283  LAC =<D JMS CAR
@@ -347,7 +347,7 @@ PAGE    7                    FREEWAY CROSSING PROGRAM
   606                 327 SCOREMOD BSS 1 ROUTINE TO MODIFY SCORE
   607      032736     328  ISZ #TIME  INCREMENT TIME IF SETFIRE SET
   610      100000     329  NOP
-
+
 PAGE    8                    FREEWAY CROSSING PROGRAM
 
   611      062725     330  LAC #SCOREON
@@ -397,7 +397,7 @@ PAGE    8                    FREEWAY CROSSING PROGRAM
   665      122740     374  I DAC #NUM1
   666      032740     375  ISZ #NUM1
   667      100005     376  COA
-  
+
 PAGE    9                    FREEWAY CROSSING PROGRAM
 
   670      022737     377  DAC #BLANK CHANGE BLANK INDICATOR
@@ -447,7 +447,7 @@ PAGE    9                    FREEWAY CROSSING PROGRAM
   744      062741     421  LAC #CRASH
   745      035315     422  JMS OUTPUT OUTPUT CRASH OR NOT
   746      004015     423  LAW 15     CR
-  
+
 PAGE    10                   FREEWAY CROSSING PROGRAM
 
   747      035371     424  JMS WRITE
@@ -497,8 +497,8 @@ PAGE    10                   FREEWAY CROSSING PROGRAM
  1023      002002     468  ASP
  1024      100006     469  CIA        /ABSOLUTE VALUE
  1025      022743     470  DAC #YDIF
- 
-PAGE   11                    FREEWAY CROSSING PROGRAM
+
+PAGE    11                   FREEWAY CROSSING PROGRAM
 
  1026      162720     471  I LAC #POSIT
  1027      003061     472  SAR 1
@@ -547,8 +547,8 @@ PAGE   11                    FREEWAY CROSSING PROGRAM
  1077      102001     515  ASN        /SKIP IF NONZERO
  1100      111076     516  I JMP RAND /RETURN
  1101      021105     517  DAC .+4
- 
-PAGE   12                    FREEWAY CROSSING PROGRAM
+
+PAGE    12                   FREEWAY CROSSING PROGRAM
 
  1102      035112     518  JMS NR     /GET RANDOM NUMBER 0-77777
  1103      061127     519  LAC RD     /LOAD IT
@@ -597,8 +597,8 @@ PAGE   12                    FREEWAY CROSSING PROGRAM
                       562             /A:=0
                       563             /MSN:=TRUE
                       564             /IF X<0 THEN BEGIN X:=-X
-                      
-PAGE   13                    FREEWAY CROSSING PROGRAM
+
+PAGE    13                   FREEWAY CROSSING PROGRAM
                       
                       565             /                  MSN:=-MSN; END
                       566             /IF Q<0 THEN BEGIN Q:=-Q
@@ -647,8 +647,8 @@ PAGE   13                    FREEWAY CROSSING PROGRAM
  1172      031211     609  ISZ M+61   /INCREMENT COUNTER,=0?
  1173      011155     610  JMP M+25   /NO, LOOP
  1174      061212     611  LAC M+62   /YES, EXIT LOOP;0=NO OVER.,NF  0=OVERFLOW(M...
- 
-PAGE   14                    FREEWAY CROSSING PROGRAM
+
+PAGE    14                   FREEWAY CROSSING PROGRAM
 
  1175      100010     612  CLL        /CLEAR LINK (NO OVERFLOW)
  1176      002001     613  ASZ        /TEST FOR OVERFLOW
@@ -697,8 +697,8 @@ PAGE   14                    FREEWAY CROSSING PROGRAM
  1220      100006     656  CIA        /YES,2'S COMP. AC
  1221      100020     657  CML        /COMP. LINK (REMEMBER SIGN)
  1222      021307     658  DAC D+73   /DIVIDEND IN Q
-
-PAGE   15                    FREEWAY CROSSING PROGRAM
+
+PAGE    15                   FREEWAY CROSSING PROGRAM
 
  1223      100003     659  STA        /-1 TO AC
  1224      102004     660  LSN        /DIVIDEND NEGATIVE?
@@ -747,8 +747,8 @@ PAGE   15                    FREEWAY CROSSING PROGRAM
  1277      121214     703  I DAC D    /PLACE IT IN WORD AFTER JMS
  1300      031214     704  ISZ D      /POINT TO RETURN ADR
  1301      061307     705  LAC D+73   /QUOTIENT Q INTO AC
-
-PAGE   16                    FREEWAY CROSSING PROGRAM
+
+PAGE    16                   FREEWAY CROSSING PROGRAM
 
  1302      031313     706  ISZ D+77   /QUOTIENT NEG
  1303      100006     707  CIA        /NO,POS,2'S COMP IT
@@ -797,8 +797,8 @@ PAGE   16                    FREEWAY CROSSING PROGRAM
  1363      111355     750  I JMP OUT1 RETURN IF BLANK
  1364      100005     751  COA
  1365      022737     752  DAC #BLANK OTHERWISE SET BLANK IND. TO 1
- 
-PAGE   17                    FREEWAY CROSSING PROGRAM
+
+PAGE    17                   FREEWAY CROSSING PROGRAM
 
  1366      062722     753  LAC #TMP
  1367      035371     754  JMS WRITE
@@ -847,8 +847,8 @@ PAGE   17                    FREEWAY CROSSING PROGRAM
  1442      005000     797  D IXM
  1443      005000     798  D IXM
  1444      005000     799  D IXM
- 
-PAGE   18                    FREEWAY CROSSING PROGRAM
+
+PAGE    18                   FREEWAY CROSSING PROGRAM
  
  1445      004040     800  D RJM
  1446      004200     801 LLD2 D DXM
@@ -897,8 +897,8 @@ PAGE   18                    FREEWAY CROSSING PROGRAM
  1521      114226     844  INC D302-2
  1522      141703     845  INC B0303
  1523      154325     846  INC 302-1
- 
-PAGE   19                    FREEWAY CROSSING PROGRAM
+
+PAGE    19                   FREEWAY CROSSING PROGRAM
 
  1524      142765     847  INC 0-1-2-1
  1525      174230     848  INC -30D30
@@ -947,8 +947,8 @@ PAGE   19                    FREEWAY CROSSING PROGRAM
  1600      151362     891  INC B22-22
  1601      174171     892  INC -30F
  1602      030230     893  INC ED30   /FOUR
-
-PAGE   20                    FREEWAY CROSSING PROGRAM
+
+PAGE    20                   FREEWAY CROSSING PROGRAM
 
  1603      104303     894  INC D10B03
  1604      141702     895  INC 0302
@@ -997,8 +997,8 @@ PAGE   20                    FREEWAY CROSSING PROGRAM
  1657      153237     938  INC 2-2D3-3
  1660      113607     939  INC 2-30-3
  1661      103606     940  INC 0-30-2
-
-PAGE   21                    FREEWAY CROSSING PROGRAM
+
+PAGE    21                   FREEWAY CROSSING PROGRAM
 
  1662      177767     941  INC B-3-3-2-3
  1663      171763     942  INC -23-23
@@ -1047,8 +1047,8 @@ PAGE   21                    FREEWAY CROSSING PROGRAM
  1736      134307     985  INC -30B0-3
  1737      143706     986  INC 0-30-2
  1740      171363     987  INC -22-23
- 
-PAGE   22                    FREEWAY CROSSING PROGRAM
+
+PAGE    22                   FREEWAY CROSSING PROGRAM
 
  1741      171707     988  INC -230-3
  1742      143706     989  INC 0-30-2
@@ -1097,8 +1097,8 @@ PAGE   22                    FREEWAY CROSSING PROGRAM
  2015      170362    1032  INC -20-22
  2016      141723    1033  INC 0323
  2017      150326    1034  INC 202-2
- 
-PAGE   23                    FREEWAY CROSSING PROGRAM
+
+PAGE    23                   FREEWAY CROSSING PROGRAM
 
  2020      074571    1035  INC FF
  2021      030303    1036  INC EB03   D
@@ -1147,8 +1147,8 @@ PAGE   23                    FREEWAY CROSSING PROGRAM
  2074      153316    1079  INC B2-21-2
  2075      074571    1080  INC FF
  2076      030201    1081  INC ED01   S
-
-PAGE   24                    FREEWAY CROSSING PROGRAM
+
+PAGE    24                   FREEWAY CROSSING PROGRAM
 
  2077      152730    1082  INC B2-130
  2100      145771    1083  INC 13-31
@@ -1197,8 +1197,8 @@ PAGE   24                    FREEWAY CROSSING PROGRAM
  2153      051503    1126  D JMS LR5
  2154      051503    1127  D JMS LR5
  2155      051503    1128  D JMS LR5
- 
-PAGE   25                    FREEWAY CROSSING PROGRAM
+
+PAGE    25                   FREEWAY CROSSING PROGRAM
 
  2156      051503    1129  D JMS LR5
  2157      051503    1130  D JMS LR5
@@ -1247,8 +1247,8 @@ PAGE   25                    FREEWAY CROSSING PROGRAM
  2232      051471    1173  D JMS LLD4
  2233      051471    1174  D JMS LLD4
  2234      051471    1175  D JMS LLD4
-
-PAGE   26                    FREEWAY CROSSING PROGRAM
+
+PAGE    26                   FREEWAY CROSSING PROGRAM
 
  2235      051471    1176  D JMS LLD4
  2236      051471    1177  D JMS LLD4
@@ -1297,8 +1297,8 @@ PAGE   26                    FREEWAY CROSSING PROGRAM
  2311      051471    1220  D JMS LLD4
  2312      051471    1221  D JMS LLD4
  2313      051471    1222  D JMS LLD4
-
-PAGE   27                    FREEWAY CROSSING PROGRAM
+
+PAGE    27                   FREEWAY CROSSING PROGRAM
 
  2314      051471    1223  D JMS LLD4
  2315      051471    1224  D JMS LLD4
@@ -1347,8 +1347,8 @@ PAGE   27                    FREEWAY CROSSING PROGRAM
  2370      004100    1267  D DYM
  2371      051471    1268  D JMS LLD4
  2372      051471    1269  D JMS LLD4
- 
-PAGE   28                    FREEWAY CROSSING PROGRAM
+
+PAGE    28                   FREEWAY CROSSING PROGRAM
 
  2373      051471    1270  D JMS LLD4
  2374      051471    1271  D JMS LLD4
@@ -1397,8 +1397,8 @@ PAGE   28                    FREEWAY CROSSING PROGRAM
  2447      005000    1314  D IXM
  2450      051503    1315  D JMS LR5
  2451      051503    1316  D JMS LR5
- 
-PAGE   29                    FREEWAY CROSSING PROGRAM
+
+PAGE    29                   FREEWAY CROSSING PROGRAM
 
  2452      051503    1317  D JMS LR5
  2453      051503    1318  D JMS LR5
@@ -1447,7 +1447,7 @@ PAGE   29                    FREEWAY CROSSING PROGRAM
  2526      013640    1361  D LXA 3640
  2527      004100    1362  D DYM
  2530      004100    1363  D DYM
-
+
 PAGE    30                   FREEWAY CROSSING PROGRAM
 
  2531      052127    1364  D JMS REST
@@ -1497,7 +1497,7 @@ PAGE    30                   FREEWAY CROSSING PROGRAM
  2605      052021    1408  D JMS LETTER+13  D
  2606      052117    1409  D JMS LETTER+111 Y
  2607      014000    1410  D LXA 4000
-
+
 PAGE    31                   FREEWAY CROSSING PROGRAM
 
  2610      023100    1411 CAR0 D LYA 3100
@@ -1547,7 +1547,7 @@ PAGE    31                   FREEWAY CROSSING PROGRAM
  3004      022735    1455  DAC #OTC    FIRST OR SECOND BYTE COUNTER
  3005      062735    1456 LPP LAC #OTC
  3006      032735    1457  ISZ #OTC
-
+
 PAGE    32                   FREEWAY CROSSING PROGRAM
 
  3007      003021    1458  RAR 1
@@ -1569,7 +1569,7 @@ PAGE    32                   FREEWAY CROSSING PROGRAM
  3027                1474 B BSS 1      PRINT BUFFER
  2656                1475  REL 1       LITERALS
                      1476  END
-                     
+
 PAGE    33                   FREEWAY CROSSING PROGRAM              
 
 LITERALS
